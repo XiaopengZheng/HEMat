@@ -35,9 +35,9 @@ void matrix_16_short_int()
   // Generate the secret key and key-switching matrices that we need
   // HeapProfilerStart("test");
   secret_key.GenSecKey();
-  std::cout << "  Generating key-switching matrices..." << std::endl;    
+  std::cout << "  Generating key-switching matrices..." << std::endl;
   const vector<long> Trace17 = {1901, 4276, 2376, 951};
-  const vector<long> Trace19 = {851, 5526, 5101, 6801,2551};
+  const vector<long> Trace19 = {851, 5526, 5101, 6801, 2551};
   const vector<long> Trace25 = {647, 6784, 7107, 324, 3231};
   for (int i = 0; i < Trace17.size(); i++)
   {
@@ -64,8 +64,8 @@ void matrix_16_short_int()
   // Read matrices M1 and M2;
   vector<ZZ> M1(256), M2(256);
   ifstream fin1, fin2;
-  fin1.open("data/A_16.txt", ios::in);
-  fin2.open("data/B_16.txt", ios::in);
+  fin1.open("../../input/A_16.txt", ios::in);
+  fin2.open("../../input/B_16.txt", ios::in);
   for (int i = 0; i < 16; i++)
   {
     for (int j = 0; j < 16; j++)
@@ -74,6 +74,8 @@ void matrix_16_short_int()
       fin2 >> M2[i * 16 + j];
     }
   }
+  fin1.close();
+  fin2.close();
   cout << endl;
   cout << "The matrix A is equal to: " << endl;
   printf_matrix(M1, 16, 7, p);
@@ -130,9 +132,11 @@ void matrix_16_short_int()
   cout << endl;
 
   cout << "Ciphertext addition result: The matrix A + B "
-       << "mod " << p << " (" << "-" << p/2 << "~" << p/2 << ") "<<" is equal to : " << endl;
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   printf_matrix(result_add, 16, 7, p);
-  
+
   cout << endl;
 
   cout << "The running times (in seconds) is: " << endl;
@@ -160,14 +164,16 @@ void matrix_16_short_int()
   cout << endl;
 
   cout << "Ciphertext multiplication result: The matrix A * B "
-       << "mod " << p << " (" << "-" << p/2 << "~" << p/2 << ") "<<" is equal to : " << endl;
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   printf_matrix(result, 16, 7, p);
 }
 
 void matrix_32_short_int(int thread)
 {
   omp_set_num_threads(thread);
-  
+
   int M = 2;
   int d = 32;
 
@@ -176,7 +182,7 @@ void matrix_32_short_int(int thread)
   unsigned long r = 1;
   unsigned long bits = 110;
   unsigned long c = 2;
-  
+
   std::cout << "Initialising context object..." << std::endl;
   helib::Context context = helib::ContextBuilder<helib::BGV>().m(m).p(p).r(r).bits(bits).c(c).build();
   std::cout << "  nslots n = "
@@ -191,9 +197,9 @@ void matrix_32_short_int(int thread)
   // Generate the secret key and key-switching matrices that we need
   // HeapProfilerStart("test");
   secret_key.GenSecKey();
-  std::cout << "  Generating key-switching matrices..." << std::endl;    
+  std::cout << "  Generating key-switching matrices..." << std::endl;
   const vector<long> Trace17 = {1901, 4276, 2376, 951};
-  const vector<long> Trace19 = {851, 5526, 5101, 6801,2551};
+  const vector<long> Trace19 = {851, 5526, 5101, 6801, 2551};
   const vector<long> Trace25 = {647, 6784, 7107, 324, 3231};
   for (int i = 0; i < Trace17.size(); i++)
   {
@@ -221,8 +227,8 @@ void matrix_32_short_int(int thread)
   // Read matrices M1 and M2;
   vector<ZZ> M1(d * d), M2(d * d);
   ifstream fin1, fin2;
-  fin1.open("data/A_32.txt", ios::in);
-  fin2.open("data/B_32.txt", ios::in);
+  fin1.open("../../input/A_32.txt", ios::in);
+  fin2.open("../../input/B_32.txt", ios::in);
   for (int i = 0; i < d; i++)
   {
     for (int j = 0; j < d; j++)
@@ -286,13 +292,13 @@ void matrix_32_short_int(int thread)
   }
   HELIB_NTIMER_STOP(Encrypt);
   helib::printNamedTimer(std::cout, "Encrypt");
-  
+
   // Matrix addition:
   vector<vector<helib::Ctxt>> ctxt_add(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
   HELIB_NTIMER_START(MatAdd);
-  for (int i = 0;i< M;i++)
+  for (int i = 0; i < M; i++)
   {
-    for (int j = 0;j<M;j++)
+    for (int j = 0; j < M; j++)
     {
       ctxt_add[i][j] = ctxt1[i][j];
       ctxt_add[i][j].addCtxt(ctxt2[i][j]);
@@ -329,7 +335,9 @@ void matrix_32_short_int(int thread)
   cout << endl;
 
   cout << "The matrix A + B "
-       << "mod " << p << " (" << "-" << p/2 << "~" << p/2 << ") "<<" is equal to : " << endl;
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   vector<ZZ> result_total_add(d * d);
   for (int i = 0; i < d; i++)
   {
@@ -342,7 +350,7 @@ void matrix_32_short_int(int thread)
   fout.open("output/M_32_add.txt", ios::out);
   printf_matrix(result_total_add, d, 11, p, fout);
   fout.close();
-  
+
   cout << endl;
   cout << "The running times (in seconds) is: " << endl;
   // // Matrix Multiplication:
@@ -381,7 +389,9 @@ void matrix_32_short_int(int thread)
   cout << endl;
 
   cout << "The matrix A*B "
-      << "mod " << p << " (" << "-" << p/2 << "~" << p/2 << ") "<<" is equal to : " << endl;
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   vector<ZZ> result_total(d * d);
   for (int i = 0; i < d; i++)
   {
@@ -398,7 +408,7 @@ void matrix_32_short_int(int thread)
 void matrix_64_short_int(int thread = 16)
 {
   omp_set_num_threads(thread);
-  
+
   int M = 4;
   int d = 64;
 
@@ -407,7 +417,7 @@ void matrix_64_short_int(int thread = 16)
   unsigned long r = 1;
   unsigned long bits = 110;
   unsigned long c = 2;
-  
+
   std::cout << "Initialising context object..." << std::endl;
   helib::Context context = helib::ContextBuilder<helib::BGV>().m(m).p(p).r(r).bits(bits).c(c).build();
   std::cout << "  nslots n = "
@@ -422,9 +432,9 @@ void matrix_64_short_int(int thread = 16)
   // Generate the secret key and key-switching matrices that we need
   // HeapProfilerStart("test");
   secret_key.GenSecKey();
-  std::cout << "  Generating key-switching matrices..." << std::endl;    
+  std::cout << "  Generating key-switching matrices..." << std::endl;
   const vector<long> Trace17 = {1901, 4276, 2376, 951};
-  const vector<long> Trace19 = {851, 5526, 5101, 6801,2551};
+  const vector<long> Trace19 = {851, 5526, 5101, 6801, 2551};
   const vector<long> Trace25 = {647, 6784, 7107, 324, 3231};
   for (int i = 0; i < Trace17.size(); i++)
   {
@@ -452,8 +462,8 @@ void matrix_64_short_int(int thread = 16)
   // Read matrices M1 and M2;
   vector<ZZ> M1(d * d), M2(d * d);
   ifstream fin1, fin2;
-  fin1.open("data/A_64.txt", ios::in);
-  fin2.open("data/B_64.txt", ios::in);
+  fin1.open("../../input/A_64.txt", ios::in);
+  fin2.open("../../input/B_64.txt", ios::in);
   for (int i = 0; i < d; i++)
   {
     for (int j = 0; j < d; j++)
@@ -471,7 +481,7 @@ void matrix_64_short_int(int thread = 16)
   cout << "The matrix B is equal to: " << endl;
   printf_matrix(M2, d, 5, p);
   cout << endl;
-  
+
   // cout << "Plaintext multiplication: A*B is equal to: " << endl;
   // plain_text_multiplication(M1,M2,d);
   // cout << endl;
@@ -516,13 +526,13 @@ void matrix_64_short_int(int thread = 16)
   }
   HELIB_NTIMER_STOP(Encrypt);
   helib::printNamedTimer(std::cout, "Encrypt");
-  
-   // Matrix addition:
+
+  // Matrix addition:
   vector<vector<helib::Ctxt>> ctxt_add(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
   HELIB_NTIMER_START(MatAdd);
-  for (int i = 0;i< M;i++)
+  for (int i = 0; i < M; i++)
   {
-    for (int j = 0;j<M;j++)
+    for (int j = 0; j < M; j++)
     {
       ctxt_add[i][j] = ctxt1[i][j];
       ctxt_add[i][j].addCtxt(ctxt2[i][j]);
@@ -559,7 +569,9 @@ void matrix_64_short_int(int thread = 16)
   cout << endl;
 
   cout << "The matrix A + B "
-       << "mod " << p << " (" << "-" << p/2 << "~" << p/2 << ") "<<" is equal to : " << endl;
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   vector<ZZ> result_total_add(d * d);
   for (int i = 0; i < d; i++)
   {
@@ -574,7 +586,7 @@ void matrix_64_short_int(int thread = 16)
   fout.close();
 
   cout << endl;
-  
+
   cout << "The running times (in seconds) is: " << endl;
 
   // // Matrix Multiplication:
@@ -613,7 +625,9 @@ void matrix_64_short_int(int thread = 16)
   cout << endl;
 
   cout << "The matrix A*B "
-      << "mod " << p << " (" << "-" << p/2 << "~" << p/2 << ") "<<" is equal to : " << endl;
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   vector<ZZ> result_total(d * d);
   for (int i = 0; i < d; i++)
   {
@@ -679,8 +693,8 @@ void matrix_16_int()
   // Read matrices M1 and M2;
   vector<ZZ> M1(256), M2(256);
   ifstream fin1, fin2;
-  fin1.open("data/A_16_int.txt", ios::in);
-  fin2.open("data/B_16_int.txt", ios::in);
+  fin1.open("../../input/A_16_int.txt", ios::in);
+  fin2.open("../../input/B_16_int.txt", ios::in);
   for (int i = 0; i < 16; i++)
   {
     for (int j = 0; j < 16; j++)
@@ -717,7 +731,7 @@ void matrix_16_int()
   HELIB_NTIMER_STOP(Encrypt);
   helib::printNamedTimer(std::cout, "Encrypt");
   helib::Ptxt<helib::BGV> plaintext_result(context);
-  
+
   // Matrix addition:
   helib::Ctxt ctxt_add = ctxt1;
   HELIB_NTIMER_START(MatAdd);
@@ -742,9 +756,11 @@ void matrix_16_int()
   cout << endl;
 
   cout << "Ciphertext addition result: The matrix A + B "
-       << "mod " << p << " (" << "-" << p/2 << "~" << p/2 << ") "<<" is equal to : " << endl;
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   printf_matrix(result_add, 16, 11, p);
-  
+
   cout << endl;
 
   cout << "The running times (in seconds) is: " << endl;
@@ -772,13 +788,15 @@ void matrix_16_int()
   cout << endl;
 
   cout << "Ciphertext addition result: The matrix A * B "
-       << "mod " << p << " (" << "-" << p/2 << "~" << p/2 << ") "<<" is equal to : " << endl;
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   printf_matrix(result, 16, 11, p);
 }
 
-void matrix_32_int()
+void matrix_32_int(int thread)
 {
-  omp_set_num_threads(4);
+  omp_set_num_threads(thread);
   int m1 = 27;
   int m2 = 19;
   int m3 = 25;
@@ -831,8 +849,8 @@ void matrix_32_int()
   // Read matrices M1 and M2;
   vector<ZZ> M1(d * d), M2(d * d);
   ifstream fin1, fin2;
-  fin1.open("data/M1_32.txt", ios::in);
-  fin2.open("data/M2_32.txt", ios::in);
+  fin1.open("../../input/A_32_int.txt", ios::in);
+  fin2.open("../../input/B_32_int.txt", ios::in);
   for (int i = 0; i < d; i++)
   {
     for (int j = 0; j < d; j++)
@@ -892,13 +910,13 @@ void matrix_32_int()
   }
   HELIB_NTIMER_STOP(Encrypt);
   helib::printNamedTimer(std::cout, "Encrypt");
-  
+
   // Matrix addition:
   vector<vector<helib::Ctxt>> ctxt_add(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
   HELIB_NTIMER_START(MatAdd);
-  for (int i = 0;i< M;i++)
+  for (int i = 0; i < M; i++)
   {
-    for (int j = 0;j<M;j++)
+    for (int j = 0; j < M; j++)
     {
       ctxt_add[i][j] = ctxt1[i][j];
       ctxt_add[i][j].addCtxt(ctxt2[i][j]);
@@ -935,7 +953,9 @@ void matrix_32_int()
   cout << endl;
 
   cout << "The matrix A + B "
-       << "mod " << p << " (" << "-" << p/2 << "~" << p/2 << ") "<<" is equal to : " << endl;
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   vector<ZZ> result_total_add(d * d);
   for (int i = 0; i < d; i++)
   {
@@ -948,7 +968,7 @@ void matrix_32_int()
   fout.open("output/M_32_add.txt", ios::out);
   printf_matrix(result_total_add, d, 11, p, fout);
   fout.close();
-  
+
   cout << endl;
   cout << "The running times (in seconds) is: " << endl;
 
@@ -987,8 +1007,10 @@ void matrix_32_int()
 
   cout << endl;
 
-  cout << "The matrix M1*M2 "
-       << "mod " << p << " is equal to : " << endl;
+  cout << "The matrix A * B "
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   vector<ZZ> result_total(d * d);
   for (int i = 0; i < d; i++)
   {
@@ -997,14 +1019,14 @@ void matrix_32_int()
       result_total[i * d + j] = result[i / 16][j / 16][(i % 16) * 16 + (j % 16)];
     }
   }
-  fout.open("output/M_32.txt", ios::out);
+  fout.open("output/M_32_mult.txt", ios::out);
   printf_matrix(result_total, d, 11, p, fout);
   fout.close();
 }
 
-void matrix_64_int()
+void matrix_64_int(int thread)
 {
-  omp_set_num_threads(16);
+  omp_set_num_threads(thread);
   int m1 = 27;
   int m2 = 19;
   int m3 = 25;
@@ -1057,10 +1079,10 @@ void matrix_64_int()
   // Read matrices M1 and M2;
   vector<ZZ> M1(d * d), M2(d * d);
   ifstream fin1, fin2;
-  cout << "Read M1 in 'data/M1_64.txt'" << endl;
-  fin1.open("data/M1_64.txt", ios::in);
-  cout << "Read M2 in 'data/M2_64.txt'" << endl;
-  fin2.open("data/M2_64.txt", ios::in);
+  cout << "Read M1 in '../../input/M1_64.txt'" << endl;
+  fin1.open("../../input/A_64_int.txt", ios::in);
+  cout << "Read M2 in '../../input/M2_64.txt'" << endl;
+  fin2.open("../../input/B_64_int.txt", ios::in);
   for (int i = 0; i < d; i++)
   {
     for (int j = 0; j < d; j++)
@@ -1071,7 +1093,11 @@ void matrix_64_int()
   }
   fin1.close();
   fin2.close();
-
+  ofstream fout1, fout2;
+  fout1.open("../../input/A_64_int.txt", ios::out);
+  fout2.open("../../input/B_64_int.txt", ios::out);
+  printf_matrix(M1, d, 5, p, fout1);
+  printf_matrix(M2, d, 5, p, fout2);
   // Block matrices
   vector<vector<vector<ZZ>>> b_M1(M, vector<vector<ZZ>>(M, vector<ZZ>()));
   vector<vector<vector<ZZ>>> b_M2(M, vector<vector<ZZ>>(M, vector<ZZ>()));
@@ -1114,6 +1140,68 @@ void matrix_64_int()
   }
   HELIB_NTIMER_STOP(Encrypt);
   helib::printNamedTimer(std::cout, "Encrypt");
+
+  // Matrix addition:
+  vector<vector<helib::Ctxt>> ctxt_add(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
+  HELIB_NTIMER_START(MatAdd);
+  for (int i = 0; i < M; i++)
+  {
+    for (int j = 0; j < M; j++)
+    {
+      ctxt_add[i][j] = ctxt1[i][j];
+      ctxt_add[i][j].addCtxt(ctxt2[i][j]);
+    }
+  }
+  HELIB_NTIMER_STOP(MatAdd);
+  helib::printNamedTimer(std::cout, "MatAdd");
+
+  HELIB_NTIMER_START(Decrypt_add);
+  vector<vector<helib::Ptxt<helib::BGV>>> plaintext_result_add(M, vector<helib::Ptxt<helib::BGV>>(M, helib::Ptxt<helib::BGV>(context)));
+#pragma omp parallel for
+  for (int L = 0; L < M * M; L++)
+  {
+    int i = L / M;
+    int j = L % M;
+    secret_key.Decrypt(plaintext_result_add[i][j], ctxt_add[i][j]);
+  }
+  HELIB_NTIMER_STOP(Decrypt_add);
+  helib::printNamedTimer(std::cout, "Decrypt_add");
+
+  // Decode:
+  vector<vector<vector<ZZ>>> result_add(M, vector<vector<ZZ>>(M, vector<ZZ>(256)));
+  HELIB_NTIMER_START(Decode_add);
+#pragma omp parallel for
+  for (int L = 0; L < M * M; L++)
+  {
+    int i = L / M;
+    int j = L % M;
+    decode_16_int(result_add[i][j], Base, plaintext_result_add[i][j].getPolyRepr(), uv);
+  }
+  HELIB_NTIMER_STOP(Decode_add);
+  helib::printNamedTimer(std::cout, "Decode_add");
+
+  cout << endl;
+
+  cout << "The matrix A + B "
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
+  vector<ZZ> result_total_add(d * d);
+  for (int i = 0; i < d; i++)
+  {
+    for (int j = 0; j < d; j++)
+    {
+      result_total_add[i * d + j] = result_add[i / 16][j / 16][(i % 16) * 16 + (j % 16)];
+    }
+  }
+  ofstream fout;
+  fout.open("output/M_64_add.txt", ios::out);
+  printf_matrix(result_total_add, d, 11, p, fout);
+  fout.close();
+
+  cout << endl;
+  cout << "The running times (in seconds) is: " << endl;
+
   // // Matrix Multiplication:
   HELIB_NTIMER_START(MatMult_new);
   vector<vector<helib::Ctxt>> ctxt(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
@@ -1148,8 +1236,10 @@ void matrix_64_int()
   cout << endl;
 
   // Printf result;
-  cout << "The matrix M1*M2 "
-       << "mod " << p << " is equal to : " << endl;
+  cout << "The matrix A * B "
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   vector<ZZ> result_total(d * d);
   for (int i = 0; i < d; i++)
   {
@@ -1158,20 +1248,18 @@ void matrix_64_int()
       result_total[i * d + j] = result[i / 16][j / 16][(i % 16) * 16 + (j % 16)];
     }
   }
-  ofstream fout;
-  fout.open("output/M_64.txt", ios::out);
+  fout.open("output/M_64_mult.txt", ios::out);
   printf_matrix(result_total, d, 11, p, fout);
   fout.close();
 }
 
 void matrix_16_int_depth_4()
 {
-  omp_set_num_threads(4);
   int m1 = 27 * 3;
   int m2 = 17;
   int m3 = 25;
   unsigned long p = 2147483647;
-  unsigned long m = m1*m2*m3;
+  unsigned long m = m1 * m2 * m3;
   unsigned long r = 1;
   unsigned long bits = 400;
   unsigned long c = 2;
@@ -1193,9 +1281,9 @@ void matrix_16_int_depth_4()
   // HeapProfilerStart("test");
   secret_key.GenSecKey();
   std::cout << "  Generating key-switching matrices..." << std::endl;
-  const vector<long> Trace27 = {2126,10201,5101,3401,6376};
+  const vector<long> Trace27 = {2126, 10201, 5101, 3401, 6376};
   const vector<long> Trace19 = {2026, 8101, 12151, 32401};
-  const vector<long> Trace25 = {1378,5509,20656,22033,6886};
+  const vector<long> Trace25 = {1378, 5509, 20656, 22033, 6886};
   for (int i = 0; i < Trace27.size(); i++)
   {
     secret_key.GenKeySWmatrix(1, Trace27[i], 0, 0);
@@ -1210,7 +1298,7 @@ void matrix_16_int_depth_4()
   }
   secret_key.setKeySwitchMap();
   const helib::PubKey &public_key = secret_key;
-  
+
   // load Encoded bases and decoded bases
   vector<ZZX> uv(256);
   helib::zzX vdw;
@@ -1219,35 +1307,28 @@ void matrix_16_int_depth_4()
   vector<ZZX> Base(256);
   decode_base_gen_16_int_depth_4(Base);
 
-   // Read matrices M1 and M2;
+  // Read matrices M1 and M2;
   vector<ZZ> M1(256), M2(256);
-  ifstream fin1, fin2;
-  fin1.open("data/A_16.txt", ios::in);
-  fin2.open("data/B_16.txt", ios::in);
+  ifstream fin1;
+  fin1.open("../../input/A_16.txt", ios::in);
   for (int i = 0; i < 16; i++)
   {
     for (int j = 0; j < 16; j++)
     {
       fin1 >> M1[i * 16 + j];
-      fin2 >> M2[i * 16 + j];
     }
   }
   cout << endl;
   cout << "The matrix A is equal to: " << endl;
-  printf_matrix(M1, 16, 11, p);
-  cout << endl;
-  cout << "The matrix B is equal to: " << endl;
-  printf_matrix(M2, 16, 11, p);
-  cout << endl;
+  printf_matrix(M1, 16, 5, p);
 
   // //-------------------------------------------------------------
   cout << "The running times (in seconds) is: " << endl;
 
   // Encode:
-  NTL::Vec<long> poly1, poly2;
+  NTL::Vec<long> poly1;
   HELIB_NTIMER_START(Encode);
   encode_16(poly1, M1, uv);
-  encode_16(poly2, M2, uv);
   HELIB_NTIMER_STOP(Encode);
   helib::printNamedTimer(std::cout, "Encode");
 
@@ -1255,18 +1336,16 @@ void matrix_16_int_depth_4()
   HELIB_NTIMER_START(Encrypt);
   helib::Ctxt ctxt1(public_key);
   public_key.Encrypt(ctxt1, poly1);
-  helib::Ctxt ctxt2(public_key);
-  public_key.Encrypt(ctxt2, poly2);
   HELIB_NTIMER_STOP(Encrypt);
   helib::printNamedTimer(std::cout, "Encrypt");
   helib::Ptxt<helib::BGV> plaintext_result(context);
-  
+
   // Matrix Multiplication:
   helib::Ctxt ctxt = ctxt1;
   cout << "  Multiplication:" << endl;
-  cout << "    A1 = A * B: ";
+  cout << "    A1 = A * A: ";
   HELIB_NTIMER_START(MatMult_A1);
-  HEmul_16_int_depth_4(ctxt, ctxt1, ctxt2, vdw, wdud);
+  HEmul_16_int_depth_4(ctxt, ctxt1, ctxt1, vdw, wdud);
   HELIB_NTIMER_STOP(MatMult_A1);
   helib::printNamedTimer(std::cout, "MatMult_A1");
   cout << "    A2 = A1 * A1: ";
@@ -1279,8 +1358,6 @@ void matrix_16_int_depth_4()
   HEmul_16_int_depth_4(ctxt, ctxt, ctxt, vdw, wdud);
   HELIB_NTIMER_STOP(MatMult_A3);
   helib::printNamedTimer(std::cout, "MatMult_A3");
-  
-
 
   // Decrypt:
   HELIB_NTIMER_START(Decrypt);
@@ -1297,8 +1374,10 @@ void matrix_16_int_depth_4()
 
   cout << endl;
 
-  cout << "The matrix [(A*B)*(A*B)]*[(A*B)*(A*B)] "
-       << "mod " << p << " is equal to : " << endl;
+  cout << "The matrix A^(2^3) = A^(8) "
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   printf_matrix(result, 16, 11, p);
 }
 
@@ -1311,7 +1390,7 @@ void matrix_32_int_depth_4(int thread)
   int M = 2;
   int d = 32;
   unsigned long p = 2147483647;
-  unsigned long m = m1*m2*m3;
+  unsigned long m = m1 * m2 * m3;
   unsigned long r = 1;
   unsigned long bits = 400;
   unsigned long c = 2;
@@ -1333,9 +1412,9 @@ void matrix_32_int_depth_4(int thread)
   // HeapProfilerStart("test");
   secret_key.GenSecKey();
   std::cout << "  Generating key-switching matrices..." << std::endl;
-  const vector<long> Trace27 = {2126,10201,5101,3401,6376};
+  const vector<long> Trace27 = {2126, 10201, 5101, 3401, 6376};
   const vector<long> Trace19 = {2026, 8101, 12151, 32401};
-  const vector<long> Trace25 = {1378,5509,20656,22033,6886};
+  const vector<long> Trace25 = {1378, 5509, 20656, 22033, 6886};
   for (int i = 0; i < Trace27.size(); i++)
   {
     secret_key.GenKeySWmatrix(1, Trace27[i], 0, 0);
@@ -1350,7 +1429,7 @@ void matrix_32_int_depth_4(int thread)
   }
   secret_key.setKeySwitchMap();
   const helib::PubKey &public_key = secret_key;
-  
+
   // load Encoded bases and decoded bases
   vector<ZZX> uv(256);
   helib::zzX vdw;
@@ -1360,44 +1439,36 @@ void matrix_32_int_depth_4(int thread)
   decode_base_gen_16_int_depth_4(Base);
 
   // Read matrices M1 and M2;
-  vector<ZZ> M1(d * d), M2(d * d);
-  ifstream fin1, fin2;
-  fin1.open("data/M1_32.txt", ios::in);
-  fin2.open("data/M2_32.txt", ios::in);
+  vector<ZZ> M1(d * d);
+  ifstream fin1;
+  fin1.open("../../input/A_32.txt", ios::in);
   for (int i = 0; i < d; i++)
   {
     for (int j = 0; j < d; j++)
     {
       fin1 >> M1[i * d + j];
-      fin2 >> M2[i * d + j];
     }
   }
   fin1.close();
-  fin2.close();
   cout << endl;
-  cout << "The matrix M1 is equal to: " << endl;
+  cout << "The matrix A is equal to: " << endl;
   printf_matrix(M1, d, 5, p);
-  cout << endl;
-  cout << "The matrix M2 is equal to: " << endl;
-  printf_matrix(M2, d, 5, p);
   cout << endl;
 
   // Block matrices
   vector<vector<vector<ZZ>>> b_M1(M, vector<vector<ZZ>>(M, vector<ZZ>()));
-  vector<vector<vector<ZZ>>> b_M2(M, vector<vector<ZZ>>(M, vector<ZZ>()));
   for (int i = 0; i < d * d; i++)
   {
     int i0 = i / d;
     int j0 = i % d;
     b_M1[i0 / 16][j0 / 16].push_back(M1[i]);
-    b_M2[i0 / 16][j0 / 16].push_back(M2[i]);
   }
 
   //-------------------------------------------------------------
   cout << "The running times (in seconds) is: " << endl;
 
   // Encode:
-  vector<vector<NTL::Vec<long>>> poly1(M, vector<NTL::Vec<long>>(M)), poly2(M, vector<NTL::Vec<long>>(M));
+  vector<vector<NTL::Vec<long>>> poly1(M, vector<NTL::Vec<long>>(M));
   HELIB_NTIMER_START(Encode);
 #pragma omp parallel for
   for (int L = 0; L < M * M; L++)
@@ -1405,7 +1476,6 @@ void matrix_32_int_depth_4(int thread)
     int i = L / M;
     int j = L % M;
     encode_16(poly1[i][j], b_M1[i][j], uv);
-    encode_16(poly2[i][j], b_M2[i][j], uv);
   }
   HELIB_NTIMER_STOP(Encode);
   helib::printNamedTimer(std::cout, "Encode");
@@ -1413,13 +1483,11 @@ void matrix_32_int_depth_4(int thread)
   // // Encrypt:
   HELIB_NTIMER_START(Encrypt);
   vector<vector<helib::Ctxt>> ctxt1(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
-  vector<vector<helib::Ctxt>> ctxt2(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
   for (int L = 0; L < M * M; L++)
   {
     int i = L / M;
     int j = L % M;
     public_key.Encrypt(ctxt1[i][j], poly1[i][j]);
-    public_key.Encrypt(ctxt2[i][j], poly2[i][j]);
   }
   HELIB_NTIMER_STOP(Encrypt);
   helib::printNamedTimer(std::cout, "Encrypt");
@@ -1427,19 +1495,19 @@ void matrix_32_int_depth_4(int thread)
   // Matrix Multiplication:
   vector<vector<helib::Ctxt>> ctxt(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
   cout << "  Multiplication:" << endl;
-  cout << "    A1 = A * B: ";
+  cout << "    A1 = A * A: ";
   HELIB_NTIMER_START(MatMult_A1);
-  HEmul_block_int_depth_4(ctxt, ctxt1, ctxt2, vdw, wdud,M);
+  HEmul_block_int_depth_4(ctxt, ctxt1, ctxt1, vdw, wdud, M);
   HELIB_NTIMER_STOP(MatMult_A1);
   helib::printNamedTimer(std::cout, "MatMult_A1");
   cout << "    A2 = A1 * A1: ";
   HELIB_NTIMER_START(MatMult_A2);
-  HEmul_block_int_depth_4(ctxt, ctxt, ctxt, vdw, wdud,M);
+  HEmul_block_int_depth_4(ctxt, ctxt, ctxt, vdw, wdud, M);
   HELIB_NTIMER_STOP(MatMult_A2);
   helib::printNamedTimer(std::cout, "MatMult_A2");
   cout << "    A3 = A2 * A2: ";
   HELIB_NTIMER_START(MatMult_A3);
-  HEmul_block_int_depth_4(ctxt, ctxt, ctxt, vdw, wdud,M);
+  HEmul_block_int_depth_4(ctxt, ctxt, ctxt, vdw, wdud, M);
   HELIB_NTIMER_STOP(MatMult_A3);
   helib::printNamedTimer(std::cout, "MatMult_A3");
 
@@ -1471,8 +1539,10 @@ void matrix_32_int_depth_4(int thread)
 
   cout << endl;
 
-  cout << "The matrix M1*M2 "
-       << "mod " << p << " is equal to : " << endl;
+  cout << "The matrix A^(2^3) = A^(8) "
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   vector<ZZ> result_total(d * d);
   for (int i = 0; i < d; i++)
   {
@@ -1496,7 +1566,7 @@ void matrix_64_int_depth_4(int thread)
   int M = 4;
   int d = 64;
   unsigned long p = 2147483647;
-  unsigned long m = m1*m2*m3;
+  unsigned long m = m1 * m2 * m3;
   unsigned long r = 1;
   unsigned long bits = 400;
   unsigned long c = 2;
@@ -1518,9 +1588,9 @@ void matrix_64_int_depth_4(int thread)
   // HeapProfilerStart("test");
   secret_key.GenSecKey();
   std::cout << "  Generating key-switching matrices..." << std::endl;
-  const vector<long> Trace27 = {2126,10201,5101,3401,6376};
+  const vector<long> Trace27 = {2126, 10201, 5101, 3401, 6376};
   const vector<long> Trace19 = {2026, 8101, 12151, 32401};
-  const vector<long> Trace25 = {1378,5509,20656,22033,6886};
+  const vector<long> Trace25 = {1378, 5509, 20656, 22033, 6886};
   for (int i = 0; i < Trace27.size(); i++)
   {
     secret_key.GenKeySWmatrix(1, Trace27[i], 0, 0);
@@ -1535,7 +1605,7 @@ void matrix_64_int_depth_4(int thread)
   }
   secret_key.setKeySwitchMap();
   const helib::PubKey &public_key = secret_key;
-  
+
   // load Encoded bases and decoded bases
   vector<ZZX> uv(256);
   helib::zzX vdw;
@@ -1547,42 +1617,33 @@ void matrix_64_int_depth_4(int thread)
   // Read matrices M1 and M2;
   vector<ZZ> M1(d * d), M2(d * d);
   ifstream fin1, fin2;
-  fin1.open("data/M1_64.txt", ios::in);
-  fin2.open("data/M2_64.txt", ios::in);
+  fin1.open("../../input/A_64.txt", ios::in);
   for (int i = 0; i < d; i++)
   {
     for (int j = 0; j < d; j++)
     {
       fin1 >> M1[i * d + j];
-      fin2 >> M2[i * d + j];
     }
   }
   fin1.close();
-  fin2.close();
   cout << endl;
-  cout << "The matrix M1 is equal to: " << endl;
+  cout << "   Read A in A_64.txt." << endl;
   //printf_matrix(M1, d, 5, p);
   cout << endl;
-  cout << "The matrix M2 is equal to: " << endl;
-  //printf_matrix(M2, d, 5, p);
-  cout << endl;
-
   // Block matrices
   vector<vector<vector<ZZ>>> b_M1(M, vector<vector<ZZ>>(M, vector<ZZ>()));
-  vector<vector<vector<ZZ>>> b_M2(M, vector<vector<ZZ>>(M, vector<ZZ>()));
   for (int i = 0; i < d * d; i++)
   {
     int i0 = i / d;
     int j0 = i % d;
     b_M1[i0 / 16][j0 / 16].push_back(M1[i]);
-    b_M2[i0 / 16][j0 / 16].push_back(M2[i]);
   }
 
   //-------------------------------------------------------------
   cout << "The running times (in seconds) is: " << endl;
 
   // Encode:
-  vector<vector<NTL::Vec<long>>> poly1(M, vector<NTL::Vec<long>>(M)), poly2(M, vector<NTL::Vec<long>>(M));
+  vector<vector<NTL::Vec<long>>> poly1(M, vector<NTL::Vec<long>>(M));
   HELIB_NTIMER_START(Encode);
 #pragma omp parallel for
   for (int L = 0; L < M * M; L++)
@@ -1590,7 +1651,6 @@ void matrix_64_int_depth_4(int thread)
     int i = L / M;
     int j = L % M;
     encode_16(poly1[i][j], b_M1[i][j], uv);
-    encode_16(poly2[i][j], b_M2[i][j], uv);
   }
   HELIB_NTIMER_STOP(Encode);
   helib::printNamedTimer(std::cout, "Encode");
@@ -1598,13 +1658,11 @@ void matrix_64_int_depth_4(int thread)
   // // Encrypt:
   HELIB_NTIMER_START(Encrypt);
   vector<vector<helib::Ctxt>> ctxt1(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
-  vector<vector<helib::Ctxt>> ctxt2(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
   for (int L = 0; L < M * M; L++)
   {
     int i = L / M;
     int j = L % M;
     public_key.Encrypt(ctxt1[i][j], poly1[i][j]);
-    public_key.Encrypt(ctxt2[i][j], poly2[i][j]);
   }
   HELIB_NTIMER_STOP(Encrypt);
   helib::printNamedTimer(std::cout, "Encrypt");
@@ -1612,7 +1670,22 @@ void matrix_64_int_depth_4(int thread)
   // // Matrix Multiplication:
   HELIB_NTIMER_START(MatMult_new);
   vector<vector<helib::Ctxt>> ctxt(M, vector<helib::Ctxt>(M, helib::Ctxt(public_key)));
-  HEmul_block_int_depth_4(ctxt, ctxt1, ctxt2, vdw, wdud, M);
+  cout << "  Multiplication:" << endl;
+  cout << "    A1 = A * A: ";
+  HELIB_NTIMER_START(MatMult_A1);
+  HEmul_block_int_depth_4(ctxt, ctxt1, ctxt1, vdw, wdud, M);
+  HELIB_NTIMER_STOP(MatMult_A1);
+  helib::printNamedTimer(std::cout, "MatMult_A1");
+  cout << "    A2 = A1 * A1: ";
+  HELIB_NTIMER_START(MatMult_A2);
+  HEmul_block_int_depth_4(ctxt, ctxt, ctxt, vdw, wdud, M);
+  HELIB_NTIMER_STOP(MatMult_A2);
+  helib::printNamedTimer(std::cout, "MatMult_A2");
+  cout << "    A3 = A2 * A2: ";
+  HELIB_NTIMER_START(MatMult_A3);
+  HEmul_block_int_depth_4(ctxt, ctxt, ctxt, vdw, wdud, M);
+  HELIB_NTIMER_STOP(MatMult_A3);
+  helib::printNamedTimer(std::cout, "MatMult_A3");
   HELIB_NTIMER_STOP(MatMult_new);
   helib::printNamedTimer(std::cout, "MatMult_new");
 
@@ -1644,8 +1717,10 @@ void matrix_64_int_depth_4(int thread)
 
   cout << endl;
 
-  cout << "The matrix M1*M2 "
-       << "mod " << p << " is equal to : " << endl;
+  cout << "The matrix A^(2^3) = A^(8) "
+       << "mod " << p << " ("
+       << "-" << p / 2 << "~" << p / 2 << ") "
+       << " is equal to : " << endl;
   vector<ZZ> result_total(d * d);
   for (int i = 0; i < d; i++)
   {
@@ -1663,33 +1738,59 @@ void matrix_64_int_depth_4(int thread)
 int main()
 {
   int s;
-  int t,d,thread,L;
+  int t, d, thread, L;
   cout << "            ------------------------------- " << endl;
   cout << "             Momomorpic Matrix Operations" << endl;
   cout << "            ------------------------------- " << endl;
-  cout << "Please chose the size of number: '0' for '-32768~32768' and '1' for '-1073741823~1073741823"<< endl;
+  cout << "Please chose the size of number: '0' for '-32768~32768' and '1' for '-1073741823~1073741823" << endl;
   cin >> t;
-  cout << "Please input the size of matrix (16, 32 or 64):"<< endl;
+  cout << "Please input the size of matrix (16, 32 or 64):" << endl;
   cin >> d;
   if (t == 0)
-  { 
+  {
     if (d == 16)
       matrix_16_short_int();
     else
     {
-       cout << "Please input the number of thread:"<< endl;
-       cin >> thread;
-       if (d == 32)
-          matrix_32_short_int(thread);
-       else
-          matrix_64_short_int(thread);
+      cout << "Please input the number of thread:" << endl;
+      cin >> thread;
+      if (d == 32)
+        matrix_32_short_int(thread);
+      else
+        matrix_64_short_int(thread);
     }
   }
   else
   {
-      cout << "Please input the depth (1 or 3):"<< endl;
-      cin >> L;
-      matrix_32_int();
+    cout << "Please input the depth (1 or 3):" << endl;
+    cin >> L;
+    if (L == 1)
+    {
+      if (d == 16)
+        matrix_16_int();
+      else
+      {
+        cout << "Please input the number of thread:" << endl;
+        cin >> thread;
+        if (d == 32)
+          matrix_32_int(thread);
+        else
+          matrix_64_int(thread);
+      }
+    }
+    else
+    {
+      if (d == 16)
+        matrix_16_int_depth_4();
+      else
+      {
+        cout << "Please input the number of thread:" << endl;
+        cin >> thread;
+        if (d == 32)
+          matrix_32_int_depth_4(thread);
+        else
+          matrix_64_int_depth_4(thread);
+      }
+    }
   }
 }
-

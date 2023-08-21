@@ -54,7 +54,7 @@ void encode_base_gen_short_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib
   // loading bases u_iv_j
   const int n = 5760;
   ifstream fin;
-  fin.open("bases/Size_short_int.txt", ios::in);
+  fin.open("../../bases/Size_short_int.txt", ios::in);
   vector<long> size;
   for (int i = 0; i < 256; i++)
   {
@@ -63,7 +63,7 @@ void encode_base_gen_short_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib
     size.push_back(a);
   }
   fin.close();
-  fin.open("bases/uv_coeffs_short_int.txt", ios::in);
+  fin.open("../../bases/uv_coeffs_short_int.txt", ios::in);
   vector<long> uv_coeffs;
   for (int i = 0; i < 256; i++)
   {
@@ -75,7 +75,7 @@ void encode_base_gen_short_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib
     }
   }
   fin.close();
-  fin.open("bases/uv_deg_short_int.txt", ios::in);
+  fin.open("../../bases/uv_deg_short_int.txt", ios::in);
   vector<long> uv_degrees;
   for (int i = 0; i < 256; i++)
   {
@@ -113,8 +113,8 @@ void encode_base_gen_short_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib
 
   // loading vdw;
   int vdw_size = 614;
-  fin1.open("bases/vdw_coeffs_short_int.txt", ios::in);
-  fin2.open("bases/vdw_degree_short_int.txt", ios::in);
+  fin1.open("../../bases/vdw_coeffs_short_int.txt", ios::in);
+  fin2.open("../../bases/vdw_degree_short_int.txt", ios::in);
   const long inverse_17 = 30841;
 
   for (int i = 0; i < vdw_size; i++)
@@ -131,8 +131,8 @@ void encode_base_gen_short_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib
 
   // loading bases wdud;
   int wdud_size = 2510;
-  fin1.open("bases/wdud_coeffs_short_int.txt", ios::in);
-  fin2.open("bases/wdud_degree_short_int.txt", ios::in);
+  fin1.open("../../bases/wdud_coeffs_short_int.txt", ios::in);
+  fin2.open("../../bases/wdud_degree_short_int.txt", ios::in);
   const long inverse_475 = 55465;
   for (int i = 0; i < wdud_size; i++)
   {
@@ -168,7 +168,7 @@ void decode_base_gen_short_int(std::vector<NTL::ZZX> &Base)
   const int n = 5760;
   ifstream fin;
   vector<int> M_size;
-  fin.open("bases/M_size_short_int.txt", ios::in);
+  fin.open("../../bases/M_size_short_int.txt", ios::in);
   for (int i = 0; i < 256; i++)
   {
     int a;
@@ -177,8 +177,8 @@ void decode_base_gen_short_int(std::vector<NTL::ZZX> &Base)
   }
   fin.close();
   ifstream fin1, fin2;
-  fin1.open("bases/decoding_degree_short_int.txt", ios::in);
-  fin2.open("bases/decoding_coeffs_short_int.txt", ios::in);
+  fin1.open("../../bases/decoding_degree_short_int.txt", ios::in);
+  fin2.open("../../bases/decoding_coeffs_short_int.txt", ios::in);
   vector<int> degree;
   for (int i = 0; i < 256; i++)
   {
@@ -211,7 +211,7 @@ void decode_16_short_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::Z
   vector<vector<ZZ>> decode_vectors = vector<vector<ZZ>>(256, vector<ZZ>(256));
   vector<int> combination_size(256);
   ifstream fin;
-  fin.open("bases/combination_size_short_int.txt", ios::in);
+  fin.open("../../bases/combination_size_short_int.txt", ios::in);
   for (int i = 0; i < 256; i++)
   {
     int a;
@@ -219,8 +219,8 @@ void decode_16_short_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::Z
     combination_size[i] = a;
   }
   ifstream fin1, fin2;
-  fin1.open("bases/decoding_combination_short_int.txt", ios::in);
-  fin2.open("bases/combination_coeffs_short_int.txt", ios::in);
+  fin1.open("../../bases/decoding_combination_short_int.txt", ios::in);
+  fin2.open("../../bases/combination_coeffs_short_int.txt", ios::in);
 
   for (int i = 0; i < 256; i++)
   {
@@ -634,7 +634,7 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
   // loading bases u_iv_j
   const int n = 6480;
   ifstream fin;
-  fin.open("bases/Size.txt", ios::in);
+  fin.open("../../bases/Size.txt", ios::in);
   vector<long> size;
   for (int i = 0; i < 256; i++)
   {
@@ -643,7 +643,7 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
     size.push_back(a);
   }
   fin.close();
-  fin.open("bases/v_coeffs.txt", ios::in);
+  fin.open("../../bases/v_coeffs.txt", ios::in);
   vector<long> uv_coeffs;
   for (int i = 0; i < 256; i++)
   {
@@ -655,7 +655,7 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
     }
   }
   fin.close();
-  fin.open("bases/v_deg.txt", ios::in);
+  fin.open("../../bases/v_deg.txt", ios::in);
   vector<long> uv_degrees;
   for (int i = 0; i < 256; i++)
   {
@@ -694,8 +694,8 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
 
   // loading vdw;
   int vdw_size = 85;
-  fin1.open("bases/vdw_coeffs.txt", ios::in);
-  fin2.open("bases/vdw_degree.txt", ios::in);
+  fin1.open("../../bases/vdw_coeffs.txt", ios::in);
+  fin2.open("../../bases/vdw_degree.txt", ios::in);
   const long inverse_19 = 1017229096;
 
   for (int i = 0; i < vdw_size; i++)
@@ -712,8 +712,8 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
 
   // loading bases wdud;
   int wdud_size = 242;
-  fin1.open("bases/wdud_coeffs.txt", ios::in);
-  fin2.open("bases/wdud_degree.txt", ios::in);
+  fin1.open("../../bases/wdud_coeffs.txt", ios::in);
+  fin2.open("../../bases/wdud_degree.txt", ios::in);
   const long inverse_675 = 1485740538;
   for (int i = 0; i < wdud_size; i++)
   {
@@ -734,7 +734,7 @@ void decode_base_gen_16_int(std::vector<NTL::ZZX> &Base)
   const int n = 6480;
   ifstream fin;
   vector<int> M_size;
-  fin.open("bases/M_size.txt", ios::in);
+  fin.open("../../bases/M_size.txt", ios::in);
   for (int i = 0; i < 256; i++)
   {
     int a;
@@ -743,8 +743,8 @@ void decode_base_gen_16_int(std::vector<NTL::ZZX> &Base)
   }
   fin.close();
   ifstream fin1, fin2;
-  fin1.open("bases/decoding_degree.txt", ios::in);
-  fin2.open("bases/decoding_coeffs.txt", ios::in);
+  fin1.open("../../bases/decoding_degree.txt", ios::in);
+  fin2.open("../../bases/decoding_coeffs.txt", ios::in);
   vector<int> degree;
   for (int i = 0; i < 256; i++)
   {
@@ -778,7 +778,7 @@ void decode_16_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &B
   vector<vector<ZZ>> decode_vectors = vector<vector<ZZ>>(256, vector<ZZ>(256));
   vector<int> combination_size(256);
   ifstream fin;
-  fin.open("bases/combination_size.txt", ios::in);
+  fin.open("../../bases/combination_size.txt", ios::in);
   for (int i = 0; i < 256; i++)
   {
     int a;
@@ -786,8 +786,8 @@ void decode_16_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &B
     combination_size[i] = a;
   }
   ifstream fin1, fin2;
-  fin1.open("bases/decoding_combination.txt", ios::in);
-  fin2.open("bases/combination_coeffs.txt", ios::in);
+  fin1.open("../../bases/decoding_combination.txt", ios::in);
+  fin2.open("../../bases/combination_coeffs.txt", ios::in);
 
   for (int i = 0; i < 256; i++)
   {
@@ -826,7 +826,7 @@ void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, 
   // loading bases u_iv_j
   const int n = 17280;
   ifstream fin;
-  fin.open("bases/Size_depth_4.txt", ios::in);
+  fin.open("../../bases/Size_depth_4.txt", ios::in);
   vector<long> size;
   for (int i = 0; i < 256; i++)
   {
@@ -835,7 +835,7 @@ void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, 
     size.push_back(a);
   }
   fin.close();
-  fin.open("bases/v_coeffs_depth_4.txt", ios::in);
+  fin.open("../../bases/v_coeffs_depth_4.txt", ios::in);
   vector<long> uv_coeffs;
   for (int i = 0; i < 256; i++)
   {
@@ -847,7 +847,7 @@ void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, 
     }
   }
   fin.close();
-  fin.open("bases/v_deg_depth_4.txt", ios::in);
+  fin.open("../../bases/v_deg_depth_4.txt", ios::in);
   vector<long> uv_degrees;
   for (int i = 0; i < 256; i++)
   {
@@ -886,8 +886,8 @@ void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, 
 
   // loading vdw;
   int vdw_size = 80;
-  fin1.open("bases/vdw_coeffs_depth_4.txt", ios::in);
-  fin2.open("bases/vdw_degree_depth_4.txt", ios::in);
+  fin1.open("../../bases/vdw_coeffs_depth_4.txt", ios::in);
+  fin2.open("../../bases/vdw_degree_depth_4.txt", ios::in);
   const long inverse_17 = 252645135;
 
   for (int i = 0; i < vdw_size; i++)
@@ -904,8 +904,8 @@ void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, 
 
   // loading bases wdud;
   int wdud_size = 265;
-  fin1.open("bases/wdud_coeffs_depth_4.txt", ios::in);
-  fin2.open("bases/wdud_degree_depth_4.txt", ios::in);
+  fin1.open("../../bases/wdud_coeffs_depth_4.txt", ios::in);
+  fin2.open("../../bases/wdud_degree_depth_4.txt", ios::in);
   const long inverse_2025 = 495246846;
   for (int i = 0; i < wdud_size; i++)
   {
@@ -926,7 +926,7 @@ void decode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &Base)
   const int n = 17280;
   ifstream fin;
   vector<int> M_size;
-  fin.open("bases/M_size_depth_4.txt", ios::in);
+  fin.open("../../bases/M_size_depth_4.txt", ios::in);
   for (int i = 0; i < 256; i++)
   {
     int a;
@@ -935,8 +935,8 @@ void decode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &Base)
   }
   fin.close();
   ifstream fin1, fin2;
-  fin1.open("bases/decoding_degree_depth_4.txt", ios::in);
-  fin2.open("bases/decoding_coeffs_depth_4.txt", ios::in);
+  fin1.open("../../bases/decoding_degree_depth_4.txt", ios::in);
+  fin2.open("../../bases/decoding_coeffs_depth_4.txt", ios::in);
   vector<int> degree;
   for (int i = 0; i < 256; i++)
   {
@@ -970,7 +970,7 @@ void decode_16_int_depth_4(std::vector<NTL::ZZ> &result_vector, std::vector<NTL:
   vector<vector<ZZ>> decode_vectors = vector<vector<ZZ>>(256, vector<ZZ>(256));
   vector<int> combination_size(256);
   ifstream fin;
-  fin.open("bases/combination_size_depth_4.txt", ios::in);
+  fin.open("../../bases/combination_size_depth_4.txt", ios::in);
   for (int i = 0; i < 256; i++)
   {
     int a;
@@ -978,8 +978,8 @@ void decode_16_int_depth_4(std::vector<NTL::ZZ> &result_vector, std::vector<NTL:
     combination_size[i] = a;
   }
   ifstream fin1, fin2;
-  fin1.open("bases/decoding_combination_depth_4.txt", ios::in);
-  fin2.open("bases/combination_coeffs_depth_4.txt", ios::in);
+  fin1.open("../../bases/decoding_combination_depth_4.txt", ios::in);
+  fin2.open("../../bases/combination_coeffs_depth_4.txt", ios::in);
 
   for (int i = 0; i < 256; i++)
   {

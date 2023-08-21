@@ -1,1 +1,0 @@
-/usr/bin/c++  -fopenmp CMakeFiles/BGV_matrix_new.dir/BGV_matrix_new.cpp.o CMakeFiles/BGV_matrix_new.dir/matrix_new.cpp.o -o bin/BGV_matrix_new  -Wl,-rpath,/usr/local/lib /usr/local/lib/libhelib.a /usr/local/lib/libntl.so /usr/local/lib/libgmp.so 
