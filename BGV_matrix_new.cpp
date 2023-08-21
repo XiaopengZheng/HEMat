@@ -478,10 +478,12 @@ void matrix_64_short_int(int thread = 16)
   fin2.close();
   cout << endl;
   cout << "The matrix A is equal to: " << endl;
-  printf_matrix(M1, d, 5, p);
+  //printf_matrix(M1, d, 5, p);
+  cout << "   load A from A_64.txt." << endl;
   cout << endl;
   cout << "The matrix B is equal to: " << endl;
-  printf_matrix(M2, d, 5, p);
+  //printf_matrix(M2, d, 5, p);
+  cout << "   load B from B_64.txt." << endl;
   cout << endl;
 
   // cout << "Plaintext multiplication: A*B is equal to: " << endl;
@@ -1084,9 +1086,9 @@ void matrix_64_int(int thread)
   // Read matrices M1 and M2;
   vector<ZZ> M1(d * d), M2(d * d);
   ifstream fin1, fin2;
-  cout << "Read M1 in '../../input/M1_64.txt'" << endl;
+  cout << "load A from A_64_int.txt'" << endl;
   fin1.open("../../input/A_64_int.txt", ios::in);
-  cout << "Read M2 in '../../input/M2_64.txt'" << endl;
+  cout << "load B from B_64_int.txt" << endl;
   fin2.open("../../input/B_64_int.txt", ios::in);
   for (int i = 0; i < d; i++)
   {
@@ -1098,11 +1100,6 @@ void matrix_64_int(int thread)
   }
   fin1.close();
   fin2.close();
-  ofstream fout1, fout2;
-  fout1.open("../../input/A_64_int.txt", ios::out);
-  fout2.open("../../input/B_64_int.txt", ios::out);
-  printf_matrix(M1, d, 5, p, fout1);
-  printf_matrix(M2, d, 5, p, fout2);
   // Block matrices
   vector<vector<vector<ZZ>>> b_M1(M, vector<vector<ZZ>>(M, vector<ZZ>()));
   vector<vector<vector<ZZ>>> b_M2(M, vector<vector<ZZ>>(M, vector<ZZ>()));
@@ -1327,7 +1324,8 @@ void matrix_16_int_depth_4()
   }
   cout << endl;
   cout << "The matrix A is equal to: " << endl;
-  printf_matrix(M1, 16, 5, p);
+  cout << "   load A from A_64.txt." << endl;
+  //printf_matrix(M1, 16, 5, p);
 
   // //-------------------------------------------------------------
   cout << "The running times (in seconds) is: " << endl;
