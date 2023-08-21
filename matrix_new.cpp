@@ -626,7 +626,6 @@ void printf_matrix(const vector<ZZ> &M, int n, int w, long unsigned int &p, ofst
     }
     fout << std::endl;
   }
-  cout << "   See output" << endl;
 }
 
 void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::zzX &wdud)

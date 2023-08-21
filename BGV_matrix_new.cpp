@@ -347,8 +347,9 @@ void matrix_32_short_int(int thread)
     }
   }
   ofstream fout;
-  fout.open("output/M_32_add.txt", ios::out);
+  fout.open("./M_32_add.txt", ios::out);
   printf_matrix(result_total_add, d, 11, p, fout);
+  cout << "   See M_32_add.txt" << endl;
   fout.close();
 
   cout << endl;
@@ -400,8 +401,9 @@ void matrix_32_short_int(int thread)
       result_total[i * d + j] = result[i / 16][j / 16][(i % 16) * 16 + (j % 16)];
     }
   }
-  fout.open("output/M_32_mult.txt", ios::out);
+  fout.open("./M_32_mult.txt", ios::out);
   printf_matrix(result_total, d, 11, p, fout);
+  cout << "   See M_32_mult.txt" << endl;
   fout.close();
 }
 
@@ -581,8 +583,9 @@ void matrix_64_short_int(int thread = 16)
     }
   }
   ofstream fout;
-  fout.open("output/M_64_add.txt", ios::out);
+  fout.open("./M_64_add.txt", ios::out);
   printf_matrix(result_total_add, d, 11, p, fout);
+  cout << "   See M_64_add.txt" << endl;
   fout.close();
 
   cout << endl;
@@ -636,8 +639,9 @@ void matrix_64_short_int(int thread = 16)
       result_total[i * d + j] = result[i / 16][j / 16][(i % 16) * 16 + (j % 16)];
     }
   }
-  fout.open("output/M_64_mult.txt", ios::out);
+  fout.open("./M_64_mult.txt", ios::out);
   printf_matrix(result_total, d, 11, p, fout);
+  cout << "   See M_64_mult.txt" << endl;
   fout.close();
 }
 
@@ -965,10 +969,10 @@ void matrix_32_int(int thread)
     }
   }
   ofstream fout;
-  fout.open("output/M_32_add.txt", ios::out);
+  fout.open("./M_32_add.txt", ios::out);
   printf_matrix(result_total_add, d, 11, p, fout);
   fout.close();
-
+  cout << "   See M_32_add.txt" << endl;
   cout << endl;
   cout << "The running times (in seconds) is: " << endl;
 
@@ -1019,8 +1023,9 @@ void matrix_32_int(int thread)
       result_total[i * d + j] = result[i / 16][j / 16][(i % 16) * 16 + (j % 16)];
     }
   }
-  fout.open("output/M_32_mult.txt", ios::out);
+  fout.open("./M_32_mult.txt", ios::out);
   printf_matrix(result_total, d, 11, p, fout);
+  cout << "   See M_32_mult.txt" << endl;
   fout.close();
 }
 
@@ -1195,9 +1200,10 @@ void matrix_64_int(int thread)
     }
   }
   ofstream fout;
-  fout.open("output/M_64_add.txt", ios::out);
+  fout.open("./M_64_add.txt", ios::out);
   printf_matrix(result_total_add, d, 11, p, fout);
   fout.close();
+  cout << "   See M_64_add.txt" << endl;
 
   cout << endl;
   cout << "The running times (in seconds) is: " << endl;
@@ -1248,8 +1254,9 @@ void matrix_64_int(int thread)
       result_total[i * d + j] = result[i / 16][j / 16][(i % 16) * 16 + (j % 16)];
     }
   }
-  fout.open("output/M_64_mult.txt", ios::out);
+  fout.open("./M_64_mult.txt", ios::out);
   printf_matrix(result_total, d, 11, p, fout);
+  cout << "   See M_64_mult.txt" << endl;
   fout.close();
 }
 
@@ -1552,8 +1559,9 @@ void matrix_32_int_depth_4(int thread)
     }
   }
   ofstream fout;
-  fout.open("output/M_32.txt", ios::out);
+  fout.open("./M_32.txt", ios::out);
   printf_matrix(result_total, d, 11, p, fout);
+  cout << "   See M_32.txt" << endl;
   fout.close();
 }
 
@@ -1730,8 +1738,9 @@ void matrix_64_int_depth_4(int thread)
     }
   }
   ofstream fout;
-  fout.open("output/M_64.txt", ios::out);
+  fout.open("./M_64.txt", ios::out);
   printf_matrix(result_total, d, 11, p, fout);
+  cout << "   See M_64.txt" << endl;
   fout.close();
 }
 
