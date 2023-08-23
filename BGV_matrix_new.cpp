@@ -1326,6 +1326,7 @@ void matrix_16_int_depth_3(int thread)
     }
   }
   secret_key.setKeySwitchMap();
+  cout << "OK" << endl;
   const helib::PubKey &public_key = secret_key;
 
   // load Encoded bases and decoded bases

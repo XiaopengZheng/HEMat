@@ -646,7 +646,7 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
     size.push_back(a);
   }
   fin.close();
-  fin.open("../../bases/v_coeffs.txt", ios::in);
+  fin.open("../../bases/uv_coeffs.txt", ios::in);
   vector<long> uv_coeffs;
   for (int i = 0; i < 256; i++)
   {
@@ -658,7 +658,7 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
     }
   }
   fin.close();
-  fin.open("../../bases/v_deg.txt", ios::in);
+  fin.open("../../bases/uv_deg.txt", ios::in);
   vector<long> uv_degrees;
   for (int i = 0; i < 256; i++)
   {
