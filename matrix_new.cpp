@@ -18,35 +18,35 @@ using namespace NTL;
 
 void plain_text_multiplication(vector<ZZ> M1, vector<ZZ> M2, int d)
 {
-   vector<vector<ZZ>> A(d,vector<ZZ>(d)), B(d,vector<ZZ>(d));
-   vector<vector<ZZ>> M(d,vector<ZZ>(d));
-   for (int L = 0;L<d*d;L++)
-   {
-    int i = L/d;
+  vector<vector<ZZ>> A(d, vector<ZZ>(d)), B(d, vector<ZZ>(d));
+  vector<vector<ZZ>> M(d, vector<ZZ>(d));
+  for (int L = 0; L < d * d; L++)
+  {
+    int i = L / d;
     int j = L % d;
     A[i][j] = M1[L];
-    B[i][j] = M2[L];   
-   }
+    B[i][j] = M2[L];
+  }
   long unsigned int p = INT32_MAX;
 
-   for (int i = 0 ;i<d;i++)
-   {
-    for (int j = 0;j<d;j++)
+  for (int i = 0; i < d; i++)
+  {
+    for (int j = 0; j < d; j++)
     {
       M[i][j] = 0;
-      for (int k = 0;k<d;k++)
+      for (int k = 0; k < d; k++)
       {
         M[i][j] = M[i][j] + A[i][k] * B[k][j];
       }
-     int a;
-      if (M[i][j] % p < p/2)
+      int a;
+      if (M[i][j] % p < p / 2)
         a = M[i][j] % p;
       else
         a = M[i][j] % p - p;
       std::cout << setw(8) << a << " ";
     }
     cout << endl;
-   }
+  }
 }
 
 void encode_base_gen_short_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::zzX &wdud)
@@ -124,7 +124,7 @@ void encode_base_gen_short_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib
     vdw_coeffs.push_back(a);
     fin2 >> a;
     vdw_degree.push_back(a);
-    vdw[vdw_degree[i]] = vdw_coeffs[i] * inverse_17;
+    vdw[vdw_degree[i]] = vdw_coeffs[i];
   }
   fin1.close();
   fin2.close();
@@ -141,7 +141,7 @@ void encode_base_gen_short_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib
     wdud_coeffs.push_back(a);
     fin2 >> a;
     wdud_degree.push_back(a);
-    wdud[wdud_degree[i]] = wdud_coeffs[i] * inverse_475;
+    wdud[wdud_degree[i]] = wdud_coeffs[i];
   }
   fin1.close();
   fin2.close();
@@ -203,7 +203,7 @@ void decode_base_gen_short_int(std::vector<NTL::ZZX> &Base)
   bool t = true;
 }
 
-void decode_16_short_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &Base, NTL::ZZX f, const std::vector<NTL::ZZX> &uv)
+void decode_16_short_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &Base, NTL::ZZX f, const std::vector<NTL::ZZX> &uv, int t)
 {
   const int n = 5760;
   if (deg(f) == -1)
@@ -237,6 +237,8 @@ void decode_16_short_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::Z
   fin2.close();
   result_vector.resize(256);
   f.SetLength(n);
+  const long inverse_17 = 30841;
+  const long inverse_475 = 55465;
   for (int i = 0; i < 256; i++)
   {
     NTL::ZZ coeff;
@@ -246,6 +248,8 @@ void decode_16_short_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::Z
     {
       decode_vectors[i][j] =
           decode_vectors[i][j] * coeff * Base[i][deg(Base[i])];
+      for (int k = 0; k < t; k++)
+        decode_vectors[i][j] = decode_vectors[i][j] * inverse_17 * inverse_475;
       result_vector[j] = result_vector[j] + decode_vectors[i][j];
     }
   }
@@ -601,7 +605,7 @@ void printf_matrix(const std::vector<NTL::ZZ> &M, int n, int w, long unsigned in
     for (int j = 0; j < n; j++)
     {
       int a;
-      if (M[i * n + j] % p < p/2)
+      if (M[i * n + j] % p < p / 2)
         a = M[i * n + j] % p;
       else
         a = M[i * n + j] % p - p;
@@ -618,7 +622,7 @@ void printf_matrix(const vector<ZZ> &M, int n, int w, long unsigned int &p, ofst
     for (int j = 0; j < n; j++)
     {
       int a;
-      if (M[i * n + j] % p < p/2)
+      if (M[i * n + j] % p < p / 2)
         a = M[i * n + j] % p;
       else
         a = M[i * n + j] % p - p;
@@ -695,7 +699,6 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
   int vdw_size = 85;
   fin1.open("../../bases/vdw_coeffs.txt", ios::in);
   fin2.open("../../bases/vdw_degree.txt", ios::in);
-  const long inverse_19 = 1017229096;
 
   for (int i = 0; i < vdw_size; i++)
   {
@@ -704,7 +707,7 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
     vdw_coeffs.push_back(a);
     fin2 >> a;
     vdw_degree.push_back(a);
-    vdw[vdw_degree[i]] = vdw_coeffs[i] * inverse_19;
+    vdw[vdw_degree[i]] = vdw_coeffs[i];
   }
   fin1.close();
   fin2.close();
@@ -713,7 +716,7 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
   int wdud_size = 242;
   fin1.open("../../bases/wdud_coeffs.txt", ios::in);
   fin2.open("../../bases/wdud_degree.txt", ios::in);
-  const long inverse_675 = 1485740538;
+
   for (int i = 0; i < wdud_size; i++)
   {
     int a;
@@ -721,7 +724,7 @@ void encode_base_gen_16_int(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::z
     wdud_coeffs.push_back(a);
     fin2 >> a;
     wdud_degree.push_back(a);
-    wdud[wdud_degree[i]] = wdud_coeffs[i] * inverse_675;
+    wdud[wdud_degree[i]] = wdud_coeffs[i];
   }
   fin1.close();
   fin2.close();
@@ -768,7 +771,7 @@ void decode_base_gen_16_int(std::vector<NTL::ZZX> &Base)
   bool t = true;
 }
 
-void decode_16_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &Base, NTL::ZZX f, const std::vector<NTL::ZZX> &uv)
+void decode_16_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &Base, NTL::ZZX f, const std::vector<NTL::ZZX> &uv, int t)
 {
   // HELIB_NTIMER_START(decode123);
   const int n = 6480;
@@ -803,6 +806,8 @@ void decode_16_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &B
   fin2.close();
   result_vector.resize(256);
   f.SetLength(n);
+  const long inverse_19 = 1017229096;
+  const long inverse_675 = 1485740538;
   for (int i = 0; i < 256; i++)
   {
     NTL::ZZ coeff;
@@ -812,6 +817,8 @@ void decode_16_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &B
     {
       decode_vectors[i][j] =
           decode_vectors[i][j] * coeff * Base[i][deg(Base[i])];
+      for (int k = 0; k < t; k++)
+        decode_vectors[i][j] = decode_vectors[i][j] * inverse_19 * inverse_675;
       result_vector[j] = result_vector[j] + decode_vectors[i][j];
     }
   }
@@ -820,12 +827,12 @@ void decode_16_int(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &B
   // helib::printNamedTimer(std::cout, "decode123");
 }
 
-void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::zzX &wdud)
+void encode_base_gen_16_int_depth_3(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, helib::zzX &wdud)
 {
   // loading bases u_iv_j
-  const int n = 17280;
+  const int n = 12672;
   ifstream fin;
-  fin.open("../../bases/Size_depth_4.txt", ios::in);
+  fin.open("../../bases/uv_size_depth_3.txt", ios::in);
   vector<long> size;
   for (int i = 0; i < 256; i++)
   {
@@ -834,7 +841,7 @@ void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, 
     size.push_back(a);
   }
   fin.close();
-  fin.open("../../bases/v_coeffs_depth_4.txt", ios::in);
+  fin.open("../../bases/uv_coeffs_depth_3.txt", ios::in);
   vector<long> uv_coeffs;
   for (int i = 0; i < 256; i++)
   {
@@ -846,7 +853,7 @@ void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, 
     }
   }
   fin.close();
-  fin.open("../../bases/v_deg_depth_4.txt", ios::in);
+  fin.open("../../bases/uv_deg_depth_3.txt", ios::in);
   vector<long> uv_degrees;
   for (int i = 0; i < 256; i++)
   {
@@ -884,10 +891,9 @@ void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, 
   }
 
   // loading vdw;
-  int vdw_size = 80;
-  fin1.open("../../bases/vdw_coeffs_depth_4.txt", ios::in);
-  fin2.open("../../bases/vdw_degree_depth_4.txt", ios::in);
-  const long inverse_17 = 252645135;
+  int vdw_size = 81;
+  fin1.open("../../bases/vdw_coeffs_depth_3.txt", ios::in);
+  fin2.open("../../bases/vdw_degree_depth_3.txt", ios::in);
 
   for (int i = 0; i < vdw_size; i++)
   {
@@ -896,16 +902,15 @@ void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, 
     vdw_coeffs.push_back(a);
     fin2 >> a;
     vdw_degree.push_back(a);
-    vdw[vdw_degree[i]] = vdw_coeffs[i] * inverse_17;
+    vdw[vdw_degree[i]] = vdw_coeffs[i];
   }
   fin1.close();
   fin2.close();
 
   // loading bases wdud;
-  int wdud_size = 265;
-  fin1.open("../../bases/wdud_coeffs_depth_4.txt", ios::in);
-  fin2.open("../../bases/wdud_degree_depth_4.txt", ios::in);
-  const long inverse_2025 = 495246846;
+  int wdud_size = 372;
+  fin1.open("../../bases/wdud_coeffs_depth_3.txt", ios::in);
+  fin2.open("../../bases/wdud_degree_depth_3.txt", ios::in);
   for (int i = 0; i < wdud_size; i++)
   {
     int a;
@@ -913,19 +918,19 @@ void encode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &uv, helib::zzX &vdw, 
     wdud_coeffs.push_back(a);
     fin2 >> a;
     wdud_degree.push_back(a);
-    wdud[wdud_degree[i]] = wdud_coeffs[i] * inverse_2025;
+    wdud[wdud_degree[i]] = wdud_coeffs[i];
   }
   fin1.close();
   fin2.close();
 }
 
-void decode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &Base)
+void decode_base_gen_16_int_depth_3(std::vector<NTL::ZZX> &Base)
 {
   // loading decoding bases
-  const int n = 17280;
+  const int n = 12672;
   ifstream fin;
   vector<int> M_size;
-  fin.open("../../bases/M_size_depth_4.txt", ios::in);
+  fin.open("../../bases/M_size_depth_3.txt", ios::in);
   for (int i = 0; i < 256; i++)
   {
     int a;
@@ -934,8 +939,8 @@ void decode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &Base)
   }
   fin.close();
   ifstream fin1, fin2;
-  fin1.open("../../bases/decoding_degree_depth_4.txt", ios::in);
-  fin2.open("../../bases/decoding_coeffs_depth_4.txt", ios::in);
+  fin1.open("../../bases/decoding_degree_depth_3.txt", ios::in);
+  fin2.open("../../bases/decoding_coeffs_depth_3.txt", ios::in);
   vector<int> degree;
   for (int i = 0; i < 256; i++)
   {
@@ -960,16 +965,16 @@ void decode_base_gen_16_int_depth_4(std::vector<NTL::ZZX> &Base)
   bool t = true;
 }
 
-void decode_16_int_depth_4(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &Base, NTL::ZZX f, const std::vector<NTL::ZZX> &uv)
+void decode_16_int_depth_3(std::vector<NTL::ZZ> &result_vector, std::vector<NTL::ZZX> &Base, NTL::ZZX f, const std::vector<NTL::ZZX> &uv, int t)
 {
   // HELIB_NTIMER_START(decode123);
-  const int n = 17280;
+  const int n = 12672;
   if (deg(f) == -1)
     return;
   vector<vector<ZZ>> decode_vectors = vector<vector<ZZ>>(256, vector<ZZ>(256));
   vector<int> combination_size(256);
   ifstream fin;
-  fin.open("../../bases/combination_size_depth_4.txt", ios::in);
+  fin.open("../../bases/combination_size_depth_3.txt", ios::in);
   for (int i = 0; i < 256; i++)
   {
     int a;
@@ -977,8 +982,8 @@ void decode_16_int_depth_4(std::vector<NTL::ZZ> &result_vector, std::vector<NTL:
     combination_size[i] = a;
   }
   ifstream fin1, fin2;
-  fin1.open("../../bases/decoding_combination_depth_4.txt", ios::in);
-  fin2.open("../../bases/combination_coeffs_depth_4.txt", ios::in);
+  fin1.open("../../bases/decoding_combination_depth_3.txt", ios::in);
+  fin2.open("../../bases/combination_coeffs_depth_3.txt", ios::in);
 
   for (int i = 0; i < 256; i++)
   {
@@ -995,6 +1000,7 @@ void decode_16_int_depth_4(std::vector<NTL::ZZ> &result_vector, std::vector<NTL:
   fin2.close();
   result_vector.resize(256);
   f.SetLength(n);
+  unsigned long inverse = 1076506033;
   for (int i = 0; i < 256; i++)
   {
     NTL::ZZ coeff;
@@ -1004,6 +1010,10 @@ void decode_16_int_depth_4(std::vector<NTL::ZZ> &result_vector, std::vector<NTL:
     {
       decode_vectors[i][j] =
           decode_vectors[i][j] * coeff * Base[i][deg(Base[i])];
+      for (int k = 0; k < t; k++)
+      {
+        decode_vectors[i][j] = inverse * decode_vectors[i][j];
+      }
       result_vector[j] = result_vector[j] + decode_vectors[i][j];
     }
   }
@@ -1012,134 +1022,238 @@ void decode_16_int_depth_4(std::vector<NTL::ZZ> &result_vector, std::vector<NTL:
   // helib::printNamedTimer(std::cout, "decode123");
 }
 
-void HEmul_16_int_depth_4(helib::Ctxt &result, helib::Ctxt ctxt1, helib::Ctxt ctxt2, helib::zzX &vdw, helib::zzX &wdud)
+void HEmul_16_int_depth_3(Ctxt_leval &result, Ctxt_leval ctxt1, Ctxt_leval ctxt2, helib::zzX &vdw, helib::zzX &wdud, int thread)
 {
-  // g, g^2, g^4, g^9, g^8;
-  const vector<long> Trace27 = {2126, 10201, 5101, 3401, 6376};
-  // g,g^2,g^4,g^8;
-  const vector<long> Trace17 = {2026, 8101, 12151, 32401};
-  // g,g^2,g^4,g^10,g^8,g^9;
-  const vector<long> Trace25 = {1378, 5509, 20656, 33049, 6886, 22033};
-  // HELIB_NTIMER_START(Trace27);
-  //-------------------------------
-  helib::Ctxt ctxt_temp = ctxt1;
-  helib::Ctxt ctxt_copy = ctxt1;
-  ctxt2.multByConstant(wdud);
-  ctxt_copy = ctxt2;
-  for (int i = 0; i < Trace27.size() - 1; i++)
+  result.m_L = ctxt1.m_L + ctxt2.m_L + 1;
+  if (thread <= 1)
   {
-    ctxt_temp = ctxt2;
-    ctxt_temp.smartAutomorph(Trace27[i]);
-    ctxt2.addCtxt(ctxt_temp);
-    if (i == 2)
+    // g, g^2, g^4, g^8;
+    const vector<long> Trace32 = {4371, 3497, 6993, 1749};
+    // g,g^2,g^4,g^9,g^8;
+    const vector<long> Trace19 = {1473, 16193, 13249, 5889, 8833};
+    // g,g^2,g^5,g^11,g^4,g^10;
+    const vector<long> Trace23 = {3649, 2433, 25537, 19457, 18241, 8513};
+    // HELIB_NTIMER_START(Trace27);
+    //-------------------------------
+    helib::Ctxt ctxt_temp = ctxt1.m_ctxt;
+    helib::Ctxt ctxt_copy = ctxt1.m_ctxt;
+    ctxt2.m_ctxt.multByConstant(wdud);
+    ctxt_copy = ctxt2.m_ctxt;
+    for (int i = 0; i < Trace32.size(); i++)
     {
-      ctxt_temp = ctxt_copy;
-      ctxt_temp.smartAutomorph(Trace27[4]);
-      ctxt2.addCtxt(ctxt_temp);
+      ctxt_temp = ctxt2.m_ctxt;
+      ctxt_temp.smartAutomorph(Trace32[i]);
+      ctxt2.m_ctxt.addCtxt(ctxt_temp);
     }
-  }
-  //------------------------------
-  // HELIB_NTIMER_STOP(Trace27);
-  // helib::printNamedTimer(std::cout, "Trace27");
-  //----------------------------
-  // HELIB_NTIMER_START(Trace17);
+    //------------------------------
+    // HELIB_NTIMER_STOP(Trace32);
+    // helib::printNamedTimer(std::cout, "Trace27");
+    //----------------------------
+    // HELIB_NTIMER_START(Trace19);
 
-  ctxt1.multByConstant(vdw);
-  ctxt_copy = ctxt1;
-  for (int i = 0; i < Trace17.size(); i++)
-  {
-    ctxt_temp = ctxt1;
-    ctxt_temp.smartAutomorph(Trace17[i]);
-    ctxt1.addCtxt(ctxt_temp);
-  }
-
-  // HELIB_NTIMER_STOP(Trace19);
-  // helib::printNamedTimer(std::cout, "Trace17");
-  //   //-------------------------------
-  // HELIB_NTIMER_START(mult);
-  ctxt1.multiplyBy(ctxt2);
-  // HELIB_NTIMER_STOP(mult);
-  // helib::printNamedTimer(std::cout, "mult");
-  ctxt1.dropSmallAndSpecialPrimes();
-  // //-------------------------------
-  // HELIB_NTIMER_START(Trace5);
-  ctxt_copy = ctxt1;
-  for (int i = 0; i < Trace25.size() - 2; i++)
-  {
-    ctxt_temp = ctxt1;
-    ctxt_temp.smartAutomorph(Trace25[i]);
-    ctxt1.addCtxt(ctxt_temp);
-    if (i == 2)
+    ctxt1.m_ctxt.multByConstant(vdw);
+    ctxt_copy = ctxt1.m_ctxt;
+    for (int i = 0; i < Trace19.size() - 1; i++)
     {
-      ctxt_temp = ctxt_copy;
-      ctxt_temp.smartAutomorph(Trace25[4]);
-      ctxt1.addCtxt(ctxt_temp);
-      ctxt_temp = ctxt_copy;
-      ctxt_temp.smartAutomorph(Trace25[5]);
-      ctxt1.addCtxt(ctxt_temp);
+      ctxt_temp = ctxt1.m_ctxt;
+      ctxt_temp.smartAutomorph(Trace19[i]);
+      ctxt1.m_ctxt.addCtxt(ctxt_temp);
+      if (i == 2)
+      {
+        ctxt_temp = ctxt_copy;
+        ctxt_temp.smartAutomorph(Trace19[4]);
+        ctxt1.m_ctxt.addCtxt(ctxt_temp);
+      }
     }
+
+    // HELIB_NTIMER_STOP(Trace19);
+    // helib::printNamedTimer(std::cout, "Trace17");
+    //   //-------------------------------
+    // HELIB_NTIMER_START(mult);
+    ctxt1.m_ctxt.multiplyBy(ctxt2.m_ctxt);
+    // HELIB_NTIMER_STOP(mult);
+    // helib::printNamedTimer(std::cout, "mult");
+    ctxt1.m_ctxt.dropSmallAndSpecialPrimes();
+    // //-------------------------------
+    // HELIB_NTIMER_START(Trace23);
+    ctxt_copy = ctxt1.m_ctxt;
+    for (int i = 0; i < Trace23.size() - 2; i++)
+    {
+      ctxt_temp = ctxt1.m_ctxt;
+      ctxt_temp.smartAutomorph(Trace23[i]);
+      ctxt1.m_ctxt.addCtxt(ctxt_temp);
+      if (i == 1)
+      {
+        ctxt_temp = ctxt_copy;
+        ctxt_temp.smartAutomorph(Trace23[4]);
+        ctxt1.m_ctxt.addCtxt(ctxt_temp);
+      }
+      if (i == 2)
+      {
+        ctxt_temp = ctxt_copy;
+        ctxt_temp.smartAutomorph(Trace23[5]);
+        ctxt1.m_ctxt.addCtxt(ctxt_temp);
+      }
+    }
+    // HELIB_NTIMER_STOP(Trace23);
+    // helib::printNamedTimer(std::cout, "Trace23");
+    result.m_ctxt = ctxt1.m_ctxt;
+    // cout << result.capacity() << endl;
   }
-  // HELIB_NTIMER_STOP(Trace5);
-  // helib::printNamedTimer(std::cout, "Trace5");
-  result = ctxt1;
+  else
+  {
+    const vector<long> Trace32 = {875, 1749, 2623, 3497, 4371, 5245, 6119, 6993, 7867, 8741, 9615, 10489, 11363, 12237, 13111};
+    const vector<long> Trace19 = {1473, 4417, 5889, 7361, 8833, 10305, 11777, 13249, 14721, 16193, 17665, 19137, 20609, 22081, 23553, 25025, 26497};
+    const vector<long> Trace23 = {1217, 2433, 3649, 4865, 6081, 7297, 8513, 10945, 12161, 13377, 14593, 15809, 17025, 18241, 19457, 20673, 21889, 23105, 24321, 25537, 26753};
+    // HELIB_NTIMER_START(Trace27);
+    //-------------------------------
+    ctxt2.m_ctxt.multByConstant(wdud);
+    ctxt2.m_ctxt.dropSmallAndSpecialPrimes();
+    vector<helib::Ctxt> ctxt2_copy(Trace32.size(), ctxt2.m_ctxt);
+#pragma omp parallel for
+    for (int i = 0; i < Trace32.size(); i++)
+    {
+      ctxt2_copy[i].smartAutomorph(Trace32[i]);
+    }
+
+    for (int i = 0; i < Trace32.size(); i++)
+    {
+      ctxt2.m_ctxt.addCtxt(ctxt2_copy[i]);
+    }
+
+    //------------------------------
+    // HELIB_NTIMER_STOP(Trace32);
+    // helib::printNamedTimer(std::cout, "Trace27");
+    //----------------------------
+    // HELIB_NTIMER_START(Trace19);
+
+    ctxt1.m_ctxt.multByConstant(vdw);
+    ctxt1.m_ctxt.dropSmallAndSpecialPrimes();
+    vector<helib::Ctxt> ctxt1_copy(Trace19.size(), ctxt1.m_ctxt);
+#pragma omp parallel for
+    for (int i = 0; i < Trace19.size(); i++)
+    {
+      ctxt1_copy[i].smartAutomorph(Trace19[i]);
+    }
+
+    for (int i = 0; i < Trace19.size(); i++)
+    {
+      ctxt1.m_ctxt.addCtxt(ctxt1_copy[i]);
+    }
+
+    // HELIB_NTIMER_STOP(Trace19);
+    // helib::printNamedTimer(std::cout, "Trace17");
+    //   //-------------------------------
+    // HELIB_NTIMER_START(mult);
+    ctxt1.m_ctxt.multiplyBy(ctxt2.m_ctxt);
+    // HELIB_NTIMER_STOP(mult);
+    // helib::printNamedTimer(std::cout, "mult");
+    ctxt1.m_ctxt.dropSmallAndSpecialPrimes();
+    // //-------------------------------
+    // HELIB_NTIMER_START(Trace23);
+    vector<helib::Ctxt> ctxt_copy(Trace23.size(), ctxt1.m_ctxt);
+#pragma omp parallel for
+    for (int i = 0; i < Trace23.size(); i++)
+    {
+      ctxt_copy[i].smartAutomorph(Trace23[i]);
+    }
+
+    for (int i = 0; i < Trace23.size(); i++)
+    {
+      ctxt1.m_ctxt.addCtxt(ctxt_copy[i]);
+    }
+    // HELIB_NTIMER_STOP(Trace23);
+    // helib::printNamedTimer(std::cout, "Trace23");
+    result.m_ctxt = ctxt1.m_ctxt;
+    // cout << result.capacity() << endl;
+  }
 }
 
-void HEmul_block_int_depth_4(vector<vector<helib::Ctxt>> &ctxt, vector<vector<helib::Ctxt>> ctxt1, vector<vector<helib::Ctxt>> ctxt2, helib::zzX &vdw, helib::zzX &wdud, int M)
+void HEadd_16_int_depth_3(Ctxt_leval &result, Ctxt_leval ctxt1, Ctxt_leval ctxt2)
 {
-  // g, g^2, g^4, g^9, g^8;
-  const vector<long> Trace27 = {2126, 10201, 5101, 3401, 6376};
-  // g,g^2,g^4,g^8;
-  const vector<long> Trace17 = {2026, 8101, 12151, 32401};
-  // g,g^2,g^4,g^10,g^8,g^9;
-  const vector<long> Trace25 = {1378, 5509, 20656, 33049, 6886, 22033};
-  // HELIB_NTIMER_START(Trace27);
-  //-------------------------------
+  if (ctxt1.m_L > ctxt2.m_L)
+  {
+    int t = ctxt1.m_L - ctxt2.m_L;
+    ZZ c = ZZ(19 * 16 * 23);
+    ZZ m = ZZ(1);
+    for (int i = 0; i < t; i++)
+    {
+      m = m * c;
+    }
+    ctxt2.m_ctxt.multByConstant(m);
+  }
+  else if (ctxt1.m_L < ctxt2.m_L)
+  {
+    int t = ctxt2.m_L - ctxt1.m_L;
+    ZZ c = ZZ(19 * 16 * 23);
+    ZZ m = ZZ(1);
+    for (int i = 0; i < t; i++)
+    {
+      m = m * c;
+    }
+    ctxt1.m_ctxt.multByConstant(m);
+  }
+  result.m_ctxt = ctxt1.m_ctxt;
+  result.m_ctxt.addCtxt(ctxt2.m_ctxt);
+  result.m_L = max(ctxt1.m_L, ctxt2.m_L);
+}
 
+void HEmul_block_int_depth_3(vector<vector<Ctxt_leval>> &ctxt, vector<vector<Ctxt_leval>> ctxt1, vector<vector<Ctxt_leval>> ctxt2, helib::zzX &vdw, helib::zzX &wdud, int M)
+{
+  // g, g^2, g^4, g^8;
+  const vector<long> Trace32 = {4371, 3497, 6993, 1749};
+  // g,g^2,g^4,g^9,g^8;
+  const vector<long> Trace19 = {1473, 16193, 13249, 5889, 8833};
+  // g,g^2,g^5,g^11,g^4,g^10;
+  const vector<long> Trace23 = {3649, 2433, 25537, 19457, 18241, 8513};
+  // HELIB_NTIMER_START(Trace32);
+  //-------------------------------
+  ctxt[0][0].m_L = ctxt1[0][0].m_L + ctxt2[0][0].m_L + 1;
 #pragma omp parallel for
   for (int L = 0; L < M * M; L++)
   {
     int i = L / M;
     int j = L % M;
-    helib::Ctxt ctxt_temp = ctxt2[i][j];
-    helib::Ctxt ctxt_copy = ctxt2[i][j];
-    ctxt2[i][j].multByConstant(wdud);
-    ctxt_copy = ctxt2[i][j];
-    for (int k = 0; k < Trace27.size() - 1; k++)
+    helib::Ctxt ctxt_temp = ctxt2[i][j].m_ctxt;
+    helib::Ctxt ctxt_copy = ctxt2[i][j].m_ctxt;
+    ctxt2[i][j].m_ctxt.multByConstant(wdud);
+    ctxt_copy = ctxt2[i][j].m_ctxt;
+    for (int k = 0; k < Trace32.size(); k++)
     {
-      ctxt_temp = ctxt2[i][j];
-      ctxt_temp.smartAutomorph(Trace27[k]);
-      ctxt2[i][j].addCtxt(ctxt_temp);
-      if (k == 2)
-      {
-        ctxt_temp = ctxt_copy;
-        ctxt_temp.smartAutomorph(Trace27[4]);
-        ctxt2[i][j].addCtxt(ctxt_temp);
-      }
+      ctxt_temp = ctxt2[i][j].m_ctxt;
+      ctxt_temp.smartAutomorph(Trace32[k]);
+      ctxt2[i][j].m_ctxt.addCtxt(ctxt_temp);
     }
   }
 //------------------------------
-// HELIB_NTIMER_STOP(Trace27);
-// helib::printNamedTimer(std::cout, "Trace27");
+// HELIB_NTIMER_STOP(Trace32);
+// helib::printNamedTimer(std::cout, "Trace32");
 //----------------------------
-// HELIB_NTIMER_START(Trace17);
+// HELIB_NTIMER_START(Trace19);
 #pragma omp parallel for
   for (int L = 0; L < M * M; L++)
   {
     int i = L / M;
     int j = L % M;
-    helib::Ctxt ctxt_temp = ctxt1[i][j];
-    helib::Ctxt ctxt_copy = ctxt1[i][j];
-    ctxt1[i][j].multByConstant(vdw);
-    ctxt_copy = ctxt1[i][j];
-    for (int k = 0; k < Trace17.size(); k++)
+    helib::Ctxt ctxt_temp = ctxt1[i][j].m_ctxt;
+    helib::Ctxt ctxt_copy = ctxt1[i][j].m_ctxt;
+    ctxt1[i][j].m_ctxt.multByConstant(vdw);
+    ctxt_copy = ctxt1[i][j].m_ctxt;
+    for (int k = 0; k < Trace19.size() - 1; k++)
     {
-      ctxt_temp = ctxt1[i][j];
-      ctxt_temp.smartAutomorph(Trace17[k]);
-      ctxt1[i][j].addCtxt(ctxt_temp);
+      ctxt_temp = ctxt1[i][j].m_ctxt;
+      ctxt_temp.smartAutomorph(Trace19[k]);
+      ctxt1[i][j].m_ctxt.addCtxt(ctxt_temp);
+      if (k == 2)
+      {
+        ctxt_temp = ctxt_copy;
+        ctxt_temp.smartAutomorph(Trace19[4]);
+        ctxt1[i][j].m_ctxt.addCtxt(ctxt_temp);
+      }
     }
   }
-// HELIB_NTIMER_STOP(Trace17);
-// helib::printNamedTimer(std::cout, "Trace17");
+// HELIB_NTIMER_STOP(Trace19);
+// helib::printNamedTimer(std::cout, "Trace19");
 //   //-------------------------------
 // HELIB_NTIMER_START(mult);
 #pragma omp parallel for
@@ -1147,43 +1261,94 @@ void HEmul_block_int_depth_4(vector<vector<helib::Ctxt>> &ctxt, vector<vector<he
   {
     int i = L / M;
     int j = L % M;
-    ctxt[i][j] = ctxt1[i][0];
-    ctxt[i][j].multiplyBy(ctxt2[0][j]);
+    ctxt[i][j].m_ctxt = ctxt1[i][0].m_ctxt;
+    ctxt[i][j].m_ctxt.multiplyBy(ctxt2[0][j].m_ctxt);
     for (int k = 1; k < M; k++)
     {
-      helib::Ctxt temp = ctxt1[i][k];
-      temp.multiplyBy(ctxt2[k][j]);
-      ctxt[i][j].addCtxt(temp);
+      helib::Ctxt temp = ctxt1[i][k].m_ctxt;
+      temp.multiplyBy(ctxt2[k][j].m_ctxt);
+      ctxt[i][j].m_ctxt.addCtxt(temp);
     }
-    ctxt[i][j].dropSmallAndSpecialPrimes();
+    ctxt[i][j].m_ctxt.dropSmallAndSpecialPrimes();
   }
   // HELIB_NTIMER_STOP(mult);
   // helib::printNamedTimer(std::cout, "mult");
   //  //-------------------------------
-  // HELIB_NTIMER_START(Trace25);
+  // HELIB_NTIMER_START(Trace23);
 #pragma omp parallel for
   for (int L = 0; L < M * M; L++)
   {
     int i = L / M;
     int j = L % M;
-    helib::Ctxt ctxt_temp = ctxt[i][j];
-    helib::Ctxt ctxt_copy = ctxt[i][j];
-    for (int k = 0; k < Trace25.size() - 2; k++)
+    helib::Ctxt ctxt_temp = ctxt[i][j].m_ctxt;
+    helib::Ctxt ctxt_copy = ctxt[i][j].m_ctxt;
+    for (int k = 0; k < Trace23.size() - 2; k++)
     {
-      ctxt_temp = ctxt[i][j];
-      ctxt_temp.smartAutomorph(Trace25[k]);
-      ctxt[i][j].addCtxt(ctxt_temp);
+      ctxt_temp = ctxt[i][j].m_ctxt;
+      ctxt_temp.smartAutomorph(Trace23[k]);
+      ctxt[i][j].m_ctxt.addCtxt(ctxt_temp);
+      if (k == 1)
+      {
+        ctxt_temp = ctxt_copy;
+        ctxt_temp.smartAutomorph(Trace23[4]);
+        ctxt[i][j].m_ctxt.addCtxt(ctxt_temp);
+      }
       if (k == 2)
       {
         ctxt_temp = ctxt_copy;
-        ctxt_temp.smartAutomorph(Trace25[4]);
-        ctxt[i][j].addCtxt(ctxt_temp);
-        ctxt_temp = ctxt_copy;
-        ctxt_temp.smartAutomorph(Trace25[5]);
-        ctxt[i][j].addCtxt(ctxt_temp);
+        ctxt_temp.smartAutomorph(Trace23[5]);
+        ctxt[i][j].m_ctxt.addCtxt(ctxt_temp);
       }
     }
   }
-  // HELIB_NTIMER_STOP(Trace25);
-  // helib::printNamedTimer(std::cout, "Trace25");
+  // HELIB_NTIMER_STOP(Trace23);
+  // helib::printNamedTimer(std::cout, "Trace23");
+  // cout << ctxt[0][0].m_ctxt.capacity() << endl;
+}
+
+void HEadd_block_int_depth_3(vector<vector<Ctxt_leval>> &ctxt, vector<vector<Ctxt_leval>> ctxt1, vector<vector<Ctxt_leval>> ctxt2, int M)
+{
+  if (ctxt1[0][0].m_L > ctxt2[0][0].m_L)
+  {
+    int t = ctxt1[0][0].m_L - ctxt2[0][0].m_L;
+    ZZ c = ZZ(19 * 16 * 23);
+    ZZ m = ZZ(1);
+    for (int i = 0; i < t; i++)
+    {
+      m = m * c;
+    }
+#pragma omp parallel for
+    for (int L = 0; L < M * M; L++)
+    {
+      int i = L / M;
+      int j = L % M;
+      ctxt2[i][j].m_ctxt.multByConstant(m);
+    }
+  }
+  else if (ctxt1[0][0].m_L < ctxt2[0][0].m_L)
+  {
+    int t = ctxt2[0][0].m_L - ctxt1[0][0].m_L;
+    ZZ c = ZZ(19 * 16 * 23);
+    ZZ m = ZZ(1);
+    for (int i = 0; i < t; i++)
+    {
+      m = m * c;
+    }
+#pragma omp parallel for
+    for (int L = 0; L < M * M; L++)
+    {
+      int i = L / M;
+      int j = L % M;
+      ctxt1[i][j].m_ctxt.multByConstant(m);
+    }
+  }
+#pragma omp parallel for
+    for (int L = 0; L < M * M; L++)
+    {
+      int i = L / M;
+      int j = L % M;
+      ctxt1[i][j].m_ctxt.addCtxt(ctxt2[i][j].m_ctxt);
+      ctxt[i][j].m_ctxt = ctxt1[i][j].m_ctxt;
+    }
+    ctxt[0][0].m_L = max(ctxt1[0][0].m_L, ctxt2[0][0].m_L);
 }
