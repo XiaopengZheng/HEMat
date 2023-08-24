@@ -655,7 +655,7 @@ void matrix_16_int()
   unsigned long p = 2147483647;
   unsigned long m = m1 * m2 * m3;
   unsigned long r = 1;
-  unsigned long bits = 150;
+  unsigned long bits = 120;
   unsigned long c = 2;
 
   std::cout << "Initialising context object..." << std::endl;
@@ -672,7 +672,7 @@ void matrix_16_int()
   std::cout << "  Generating key-switching matrices..." << std::endl;
   const vector<long> Trace27 = {1426, 6176, 7126, 4751, 5701};
   const vector<long> Trace19 = {8776, 3376, 4051, 10126, 7426};
-  const vector<long> Trace25 = {514, 7183, 7696, 10774, 2566, 2053};
+  const vector<long> Trace25 = {514, 1027, 3079, 6157,2566};
   for (int i = 0; i < Trace27.size(); i++)
   {
     secret_key.GenKeySWmatrix(1, Trace27[i], 0, 0);
@@ -828,7 +828,7 @@ void matrix_32_int(int thread)
   std::cout << "  Generating key-switching matrices..." << std::endl;
   const vector<long> Trace27 = {1426, 6176, 7126, 4751, 5701};
   const vector<long> Trace19 = {8776, 3376, 4051, 10126, 7426};
-  const vector<long> Trace25 = {514, 7183, 7696, 10774, 2566, 2053};
+  const vector<long> Trace25 = {514, 1027, 3079, 6157,2566};
   for (int i = 0; i < Trace27.size(); i++)
   {
     secret_key.GenKeySWmatrix(1, Trace27[i], 0, 0);
@@ -1059,7 +1059,7 @@ void matrix_64_int(int thread)
   std::cout << "  Generating key-switching matrices..." << std::endl;
   const vector<long> Trace27 = {1426, 6176, 7126, 4751, 5701};
   const vector<long> Trace19 = {8776, 3376, 4051, 10126, 7426};
-  const vector<long> Trace25 = {514, 7183, 7696, 10774, 2566, 2053};
+  const vector<long> Trace25 = {514, 1027, 3079, 6157,2566};
   for (int i = 0; i < Trace27.size(); i++)
   {
     secret_key.GenKeySWmatrix(1, Trace27[i], 0, 0);
@@ -1213,7 +1213,7 @@ void matrix_64_int(int thread)
   helib::printNamedTimer(std::cout, "MatMult_new");
 
   // Decrypt:
-  HELIB_NTIMER_START(Decrypt);
+  HELIB_NTIMER_START(Decrypt_mult);
   vector<vector<helib::Ptxt<helib::BGV>>> plaintext_result(M, vector<helib::Ptxt<helib::BGV>>(M, helib::Ptxt<helib::BGV>(context)));
 #pragma omp parallel for
   for (int L = 0; L < M * M; L++)
@@ -1222,8 +1222,9 @@ void matrix_64_int(int thread)
     int j = L % M;
     secret_key.Decrypt(plaintext_result[i][j], ctxt[i][j]);
   }
-  HELIB_NTIMER_STOP(Decrypt);
-  helib::printNamedTimer(std::cout, "Decrypt");
+  HELIB_NTIMER_STOP(Decrypt_mult);
+  helib::printNamedTimer(std::cout, "Decrypt_mult");
+
   // Decode:
   vector<vector<vector<ZZ>>> result(M, vector<vector<ZZ>>(M, vector<ZZ>(256)));
   HELIB_NTIMER_START(Decode);

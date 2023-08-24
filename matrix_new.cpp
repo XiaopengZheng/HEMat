@@ -325,12 +325,12 @@ void HEmul_block_short_int(vector<vector<helib::Ctxt>> &ctxt, vector<vector<heli
   const vector<long> Trace17 = {1901, 4276, 2376, 951};
   const vector<long> Trace19 = {851, 5526, 5101, 6801, 2551};
   const vector<long> Trace25 = {647, 6784, 7107, 324, 3231};
-  // HELIB_NTIMER_START(Trace17);
-  //-------------------------------
 
-  // #pragma omp parallel for
+  //-------------------------------
+#pragma omp parallel for
   for (int L = 0; L < M * M; L++)
   {
+    // HELIB_NTIMER_START(Trace17);
     int i = L / M;
     int j = L % M;
     helib::Ctxt ctxt_temp = ctxt2[i][j];
@@ -343,19 +343,12 @@ void HEmul_block_short_int(vector<vector<helib::Ctxt>> &ctxt, vector<vector<heli
       ctxt_temp.smartAutomorph(Trace17[k]);
       ctxt2[i][j].addCtxt(ctxt_temp);
     }
-  }
-  //------------------------------
-  // HELIB_NTIMER_STOP(Trace27);
-  // helib::printNamedTimer(std::cout, "Trace27");
-  //----------------------------
-  // HELIB_NTIMER_START(Trace19);
-#pragma omp parallel for
-  for (int L = 0; L < M * M; L++)
-  {
-    int i = L / M;
-    int j = L % M;
-    helib::Ctxt ctxt_temp = ctxt1[i][j];
-    helib::Ctxt ctxt_copy = ctxt1[i][j];
+    ctxt2[i][j].dropSmallAndSpecialPrimes();
+    // HELIB_NTIMER_STOP(Trace17);
+    // helib::printNamedTimer(std::cout, "Trace17");
+    // HELIB_NTIMER_START(Trace19);
+    ctxt_temp = ctxt1[i][j];
+    ctxt_copy = ctxt1[i][j];
     ctxt1[i][j].multByConstant(vdw);
     ctxt_copy = ctxt1[i][j];
     for (int k = 0; k < Trace19.size() - 1; k++)
@@ -368,10 +361,11 @@ void HEmul_block_short_int(vector<vector<helib::Ctxt>> &ctxt, vector<vector<heli
         ctxt_copy.smartAutomorph(Trace19[4]);
         ctxt1[i][j].addCtxt(ctxt_copy);
       }
+      // HELIB_NTIMER_STOP(Trace19);
+      // helib::printNamedTimer(std::cout, "Trace19");
     }
+    ctxt1[i][j].dropSmallAndSpecialPrimes();
   }
-// HELIB_NTIMER_STOP(Trace19);
-// helib::printNamedTimer(std::cout, "Trace17");
 //-------------------------------
 // HELIB_NTIMER_START(mult);
 #pragma omp parallel for
@@ -387,17 +381,6 @@ void HEmul_block_short_int(vector<vector<helib::Ctxt>> &ctxt, vector<vector<heli
       temp.multiplyBy(ctxt2[k][j]);
       ctxt[i][j].addCtxt(temp);
     }
-    ctxt[i][j].dropSmallAndSpecialPrimes();
-  }
-  // HELIB_NTIMER_STOP(mult);
-  // helib::printNamedTimer(std::cout, "mult");
-  //  //-------------------------------
-  // HELIB_NTIMER_START(Trace25);
-#pragma omp parallel for
-  for (int L = 0; L < M * M; L++)
-  {
-    int i = L / M;
-    int j = L % M;
     helib::Ctxt ctxt_temp = ctxt[i][j];
     helib::Ctxt ctxt_copy = ctxt[i][j];
     for (int k = 0; k < Trace25.size() - 1; k++)
@@ -412,6 +395,17 @@ void HEmul_block_short_int(vector<vector<helib::Ctxt>> &ctxt, vector<vector<heli
       }
     }
   }
+  // HELIB_NTIMER_STOP(mult);
+  // helib::printNamedTimer(std::cout, "mult");
+  //  //-------------------------------
+  // HELIB_NTIMER_START(Trace25);
+  // #pragma omp parallel for
+  //   for (int L = 0; L < M * M; L++)
+  //   {
+  //     int i = L / M;
+  //     int j = L % M;
+
+  //   }
   // HELIB_NTIMER_STOP(Trace25);
   // helib::printNamedTimer(std::cout, "Trace25");
 }
@@ -420,7 +414,7 @@ void HEmul_16_int(helib::Ctxt &result, helib::Ctxt ctxt1, helib::Ctxt ctxt2, hel
 {
   const vector<long> Trace27 = {6176, 1426, 7126, 4751, 5701};
   const vector<long> Trace19 = {8776, 3376, 4051, 10126, 7426};
-  const vector<long> Trace25 = {7183, 514, 7696, 10774, 2566, 2053};
+  const vector<long> Trace25 = {514, 1027, 3079, 6157, 2566};
   // HELIB_NTIMER_START(Trace27);
   //-------------------------------
   helib::Ctxt ctxt_temp = ctxt1;
@@ -458,10 +452,9 @@ void HEmul_16_int(helib::Ctxt &result, helib::Ctxt ctxt1, helib::Ctxt ctxt2, hel
       ctxt_temp.smartAutomorph(Trace19[4]);
       ctxt1.addCtxt(ctxt_temp);
     }
+    // HELIB_NTIMER_STOP(Trace19);
+    // helib::printNamedTimer(std::cout, "Trace19");
   }
-
-  // HELIB_NTIMER_STOP(Trace19);
-  // helib::printNamedTimer(std::cout, "Trace19");
   //   //-------------------------------
   // HELIB_NTIMER_START(mult);
   ctxt1.multiplyBy(ctxt2);
@@ -471,19 +464,15 @@ void HEmul_16_int(helib::Ctxt &result, helib::Ctxt ctxt1, helib::Ctxt ctxt2, hel
   // //-------------------------------
   // HELIB_NTIMER_START(Trace5);
   ctxt_copy = ctxt1;
-  for (int i = 0; i < Trace25.size() - 2; i++)
+  for (int i = 0; i < Trace25.size() - 1; i++)
   {
     ctxt_temp = ctxt1;
     ctxt_temp.smartAutomorph(Trace25[i]);
     ctxt1.addCtxt(ctxt_temp);
-    if (i == 2)
+    if (i == 1)
     {
-      ctxt_temp = ctxt_copy;
-      ctxt_temp.smartAutomorph(Trace25[4]);
-      ctxt1.addCtxt(ctxt_temp);
-      ctxt_temp = ctxt_copy;
-      ctxt_temp.smartAutomorph(Trace25[5]);
-      ctxt1.addCtxt(ctxt_temp);
+      ctxt_copy.smartAutomorph(Trace25[4]);
+      ctxt1.addCtxt(ctxt_copy);
     }
   }
   // HELIB_NTIMER_STOP(Trace5);
@@ -495,7 +484,7 @@ void HEmul_block_int(vector<vector<helib::Ctxt>> &ctxt, vector<vector<helib::Ctx
 {
   const vector<long> Trace27 = {1426, 6176, 7126, 4751, 5701};
   const vector<long> Trace19 = {8776, 3376, 4051, 10126, 7426};
-  const vector<long> Trace25 = {1027, 7183, 7696, 10774, 2566, 2053};
+  const vector<long> Trace25 = {514, 1027, 3079, 6157, 2566};
   // HELIB_NTIMER_START(Trace27);
   //-------------------------------
 
@@ -520,19 +509,9 @@ void HEmul_block_int(vector<vector<helib::Ctxt>> &ctxt, vector<vector<helib::Ctx
         ctxt2[i][j].addCtxt(ctxt_temp);
       }
     }
-  }
-//------------------------------
-// HELIB_NTIMER_STOP(Trace27);
-// helib::printNamedTimer(std::cout, "Trace27");
-//----------------------------
-// HELIB_NTIMER_START(Trace19);
-#pragma omp parallel for
-  for (int L = 0; L < M * M; L++)
-  {
-    int i = L / M;
-    int j = L % M;
-    helib::Ctxt ctxt_temp = ctxt1[i][j];
-    helib::Ctxt ctxt_copy = ctxt1[i][j];
+    ctxt2[i][j].dropSmallAndSpecialPrimes();
+    ctxt_temp = ctxt1[i][j];
+    ctxt_copy = ctxt1[i][j];
     ctxt1[i][j].multByConstant(vdw);
     ctxt_copy = ctxt1[i][j];
     for (int k = 0; k < Trace19.size() - 1; k++)
@@ -547,7 +526,20 @@ void HEmul_block_int(vector<vector<helib::Ctxt>> &ctxt, vector<vector<helib::Ctx
         ctxt1[i][j].addCtxt(ctxt_temp);
       }
     }
+    ctxt1[i][j].dropSmallAndSpecialPrimes();
   }
+//------------------------------
+// HELIB_NTIMER_STOP(Trace27);
+// helib::printNamedTimer(std::cout, "Trace27");
+//----------------------------
+// HELIB_NTIMER_START(Trace19);
+// #pragma omp parallel for
+//   for (int L = 0; L < M * M; L++)
+//   {
+//     int i = L / M;
+//     int j = L % M;
+
+//   }
 // HELIB_NTIMER_STOP(Trace19);
 // helib::printNamedTimer(std::cout, "Trace19");
 //   //-------------------------------
@@ -565,35 +557,30 @@ void HEmul_block_int(vector<vector<helib::Ctxt>> &ctxt, vector<vector<helib::Ctx
       temp.multiplyBy(ctxt2[k][j]);
       ctxt[i][j].addCtxt(temp);
     }
-    ctxt[i][j].dropSmallAndSpecialPrimes();
-  }
-  // HELIB_NTIMER_STOP(mult);
-  // helib::printNamedTimer(std::cout, "mult");
-  //  //-------------------------------
-  HELIB_NTIMER_START(Trace5);
-#pragma omp parallel for
-  for (int L = 0; L < M * M; L++)
-  {
-    int i = L / M;
-    int j = L % M;
+    // ctxt[i][j].dropSmallAndSpecialPrimes();
     helib::Ctxt ctxt_temp = ctxt[i][j];
     helib::Ctxt ctxt_copy = ctxt[i][j];
-    for (int k = 0; k < Trace25.size() - 2; k++)
+    for (int k = 0; k < Trace25.size() - 1; k++)
     {
       ctxt_temp = ctxt[i][j];
       ctxt_temp.smartAutomorph(Trace25[k]);
       ctxt[i][j].addCtxt(ctxt_temp);
-      if (k == 2)
+      if (k == 1)
       {
-        ctxt_temp = ctxt_copy;
-        ctxt_temp.smartAutomorph(Trace25[4]);
-        ctxt[i][j].addCtxt(ctxt_temp);
-        ctxt_temp = ctxt_copy;
-        ctxt_temp.smartAutomorph(Trace25[5]);
-        ctxt[i][j].addCtxt(ctxt_temp);
+        ctxt_copy.smartAutomorph(Trace25[4]);
+        ctxt[i][j].addCtxt(ctxt_copy);
       }
     }
   }
+  // HELIB_NTIMER_STOP(mult);
+  // helib::printNamedTimer(std::cout, "mult");
+  //  //-------------------------------
+  //   HELIB_NTIMER_START(Trace5);
+  // #pragma omp parallel for
+  //   for (int L = 0; L < M * M; L++)
+  //   {
+
+  //   }
   // HELIB_NTIMER_STOP(Trace5);
   // helib::printNamedTimer(std::cout, "Trace5");
 }
@@ -1224,6 +1211,7 @@ void HEmul_block_int_depth_3(vector<vector<Ctxt_leval>> &ctxt, vector<vector<Ctx
       ctxt_temp.smartAutomorph(Trace32[k]);
       ctxt2[i][j].m_ctxt.addCtxt(ctxt_temp);
     }
+    ctxt2[i][j].m_ctxt.dropSmallAndSpecialPrimes();
   }
 //------------------------------
 // HELIB_NTIMER_STOP(Trace32);
@@ -1251,6 +1239,7 @@ void HEmul_block_int_depth_3(vector<vector<Ctxt_leval>> &ctxt, vector<vector<Ctx
         ctxt1[i][j].m_ctxt.addCtxt(ctxt_temp);
       }
     }
+    ctxt1[i][j].m_ctxt.dropSmallAndSpecialPrimes();
   }
 // HELIB_NTIMER_STOP(Trace19);
 // helib::printNamedTimer(std::cout, "Trace19");
@@ -1343,12 +1332,12 @@ void HEadd_block_int_depth_3(vector<vector<Ctxt_leval>> &ctxt, vector<vector<Ctx
     }
   }
 #pragma omp parallel for
-    for (int L = 0; L < M * M; L++)
-    {
-      int i = L / M;
-      int j = L % M;
-      ctxt1[i][j].m_ctxt.addCtxt(ctxt2[i][j].m_ctxt);
-      ctxt[i][j].m_ctxt = ctxt1[i][j].m_ctxt;
-    }
-    ctxt[0][0].m_L = max(ctxt1[0][0].m_L, ctxt2[0][0].m_L);
+  for (int L = 0; L < M * M; L++)
+  {
+    int i = L / M;
+    int j = L % M;
+    ctxt1[i][j].m_ctxt.addCtxt(ctxt2[i][j].m_ctxt);
+    ctxt[i][j].m_ctxt = ctxt1[i][j].m_ctxt;
+  }
+  ctxt[0][0].m_L = max(ctxt1[0][0].m_L, ctxt2[0][0].m_L);
 }

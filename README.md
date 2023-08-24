@@ -62,9 +62,17 @@ sudo ldconfig
 1. Clone the code
 ```
 git clone http://github.com/XiaopengZheng/HEMat.git
+```
+
+2. Build the code and run (HElib has been installed in `/home/usr/helib_install`)
+```
 cd HEMat
-
-
+sudo mkdir build
+cd build
+sudo cmake -DPACKAGE_BUILD=ON -DCMAKE_INSTALL_PREFIX=/home/usr/helib_install ..
+sudo make
+cd bin
+./BGV_matrix_new
 ```
 
 
